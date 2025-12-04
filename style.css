@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'Helvetica';
+  src: url('fonts/Helvetica\ Neue\ LT\ Std\ 93\ Black\ Extended.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Aplicás el margen de scroll a todos los elementos que puedan ser destino */
+div[id], section[id] {
+  scroll-margin-top: 80px; /* Altura de tu navbar (ajustá si hace falta) */
+}
+
+
+/* Elimina los márgenes y padding por defecto */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #01237F;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: Helvetica;
+}
+
+
+
+/* contador */
+
+.countdown-container {
+  text-align: center;
+  color: #fff;
+  margin: 40px 0;
+}
+
+#countdown {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  margin-top: 10px;
+  margin-bottom: 2%;
+}
+
+#countdown div {
+font-family: helvetica;
+}
+
+#countdown small {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: 5px;
+  color: #aaa;
+}
+
+.ad {
+  text-align: center;
+  margin: 5%;
+  color: #EA7B00;
+}
+
+.ad p {
+  color: #D5D6E8;
+  
+}

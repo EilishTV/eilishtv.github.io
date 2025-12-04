@@ -149,8 +149,10 @@ main {
     overflow-x: hidden;
     display: block;
     top: 72px;
-    padding: 0 calc(3.5vw + 5px);
+    padding: 0; /* quitar padding lateral */
 }
+
+
 
 main::after {
     background: url(images/extras/home-background.png) center center / cover no-repeat fixed;
@@ -272,42 +274,117 @@ main::after {
     padding: 0 0 26px;
 }
 
-.recommendedContent {
-    display: grid;
-    grid-gap: 25px;
-    gap: 25px;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+.recommends h4 {
+    margin-left: 20px; /* mismo que el padding-left del scroll */
 }
 
+.recommendedContent {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto; /* permite scroll real */
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding-bottom: 25px;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+/* ocultar scroll nativo */
+.recommendedContent::-webkit-scrollbar { display: none; }
+.recommendedContent { -ms-overflow-style: none; scrollbar-width: none; }
+
 .recWrap {
-    padding-top: 56.25%;
-    border-radius: 10px;
-    box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px, rgb(0 0 0 / 73%) 0px 16px 10px -10px;
-    cursor: pointer;
-    overflow: hidden;
     position: relative;
-    transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
     border: 3px solid rgba(249, 249, 249, 0.1);
+   
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .recWrap img {
-    inset: 0px;
-    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 1;
-    position: absolute;
-    transition: opacity 500ms ease-in-out 0s;
-    width: 100%;
-    z-index: 1;
-    top: 0;
 }
 
 .recWrap:hover {
-    box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px, rgb(0 0 0 / 73%) 0px 16px 10px -10px;
+    box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
+                rgb(0 0 0 / 73%) 0px 16px 10px -10px;
     transform: scale(1.05);
     border-color: rgba(249, 249, 249, 0.8);
+    
 }
+
+
+
+    .recWrap { 
+        width: 21%; 
+        aspect-ratio: 16 / 9; 
+        flex: 0 0 auto; 
+        transition: transform 0.5s ease; /* suaviza el movimiento */
+    }
+
+    .recContainer {
+        display: flex;
+        gap: 10px;
+        transition: transform 0.5s ease; /* movimiento del slider */
+    }
+
+    @media (min-width: 769px) {
+    .recommends { position: relative; overflow: hidden; }
+
+    .recommends .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0,0,0,0.5);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8%;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 5;
+        user-select: none;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .recommends:hover .arrow { opacity: 1; }
+
+    .recommends .arrow.left { left: 0; }
+    .recommends .arrow.right { right: 0; }
+
+    .recWrap { 
+        width: 21%; 
+        aspect-ratio: 16 / 9; 
+        flex: 0 0 auto; 
+        transition: transform 0.5s ease; 
+    }
+
+    .recommendedContent {
+        display: flex;
+        gap: 10px;
+        transition: transform 0.5s ease; 
+        scroll-behavior: smooth;
+    }
+}
+
+
+
+/* MÓVIL */
+@media (max-width: 768px) {
+    .recWrap { width: 48%; aspect-ratio: 16 / 9; flex: 0 0 auto; }
+    .recommends .arrow { display: none !important; }
+}
+
 
 @media only screen and (min-width: 768px) {
     body {
