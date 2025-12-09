@@ -170,6 +170,7 @@ main::after {
     background: transparent;
     height: 100%;
     margin: 0 -4.6875vw;
+    margin-bottom: 30px;
 }
 
 .carousel button {
@@ -283,7 +284,7 @@ main::after {
     overflow-x: auto; /* permite scroll real */
     overflow-y: hidden;
     scroll-behavior: smooth;
-    padding-bottom: 25px;
+    padding-bottom: 15px;
     padding-left: 20px;
     padding-top: 5px;
 }
