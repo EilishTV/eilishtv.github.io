@@ -155,13 +155,16 @@ main {
 
 
 main::after {
-    background: url(images/extras/home-background.png) center center / cover no-repeat fixed;
     content: "";
-    position: absolute;
-    inset: 0px;
-    opacity: 1;
+    position: fixed;   /* ESTA ES LA CLAVE */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(images/extras/home-background.png) center center / cover no-repeat;
     z-index: -1;
 }
+
 
 .carousel {
     background: transparent;
@@ -212,11 +215,7 @@ main::after {
     border-radius: 5px;
 }
 
-.carousel-cell a:hover {
-    padding: 0;
-    border: 4px solid rgba(249, 249, 249, 0.8);
-    transition-duration: 300ms;
-}
+
 
 .viewers {
     margin-top: 30px;
