@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>TEST Sheets</title>
+  <style>
+    .recommends { margin-bottom: 40px; }
+    .recommendedContent { display: flex; gap: 15px; flex-wrap: wrap; }
+    .recWrap img { width: 150px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>TEST de carga desde Google Sheets</h2>
+
+<div id="contenedor"></div>
+
+<script>
+const url = "https://opensheet.elk.sh/1PjRQDpbZQ6nscdRzlEOtwNpeEiyeEOGjkic6mggNEBY/Hoja1";
+
+fetch(url)
+  .then(r => r.json())
+  .then(data => {
+
+    console.log("DATA OBTENIDA:", data);
+
+    const cont = document.getElementById("contenedor");
+
+    if (!Array.isArray(data) || data.length === 0) {
+      cont.innerHTML = "<p>No se cargaron datos. Revisá que Hoja1 esté PUBLICADA y que tenga FILAS debajo del header.</p>";
+      return;
+    }
+
+    // Nombres EXACTOS necesarios
+    // seccion | tituloSeccion | link | imagen
+
+    const secciones = [...new Set(data.map(i => i.seccion))];
+
+    secciones.forEach(sec => {
+      const items = data.filter(i => i.seccion === sec);
+      const titulo = items[0].tituloSeccion || sec;
+
+      const bloque = document.createElement("div");
+      bloque.classList.add("recommends");
+
+      bloque.innerHTML = `
+        <h3>${titulo}</h3>
+        <div class="recommendedContent"></div>
+      `;
+
+      const inner = bloque.querySelector(".recommendedContent");
+
+      items.forEach(item => {
+        inner.innerHTML += `
+          <div class="recWrap">
+            <a href="${item.link}" target="_blank">
+              <img src="${item.imagen}">
+            </a>
+          </div>
+        `;
+      });
+
+      cont.appendChild(bloque);
+    });
+
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("contenedor").innerHTML = "ERROR cargando datos.";
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" href="index.css">
+    <title>EilishTV!</title>
+
+
+
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VRV0Y4Z5P"></script>
+  
+</head>
+<body>
+   
+    <nav>       
+        <a class="navLogo" href="index.html">
+            <img src="images/extras/logo.png" alt="EilishTV"/>
+            <a href="/menu">
+            </a>
+            <div class="navMenu">
+                <a href="https://cafecito.app/eilishtv">
+                    <img src="images/extras/donation.png.png" alt="" />
+                    <span>DONATION</span>
+                </a>     
+        </a>
+        </div>
+        <div class="TwitterCC">
+            <img class="userImg" src="images/avatars/avatar1.jpeg" alt="avatar" />
+            <div class="dropDown">
+                <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
+                <div class="dropDown">
+                    <a href="https://x.com/ccxannyv?s=11&t=rKBTa20zvrb5aXc0rHdxKQ">Twitter</a>
+
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="carousel" data-flickity='{ "wrapAround": true, "autoPlay": true }'>
+            <div class="carousel-cell">
+                <a>
+                    <img src="images/slider/extended_cut.png" alt="slider-badging" />
+                </a>
+            </div>
+
+            <div class="carousel-cell">
+                <a>
+                    <img src="images/slider/twalb.png" alt="slider-badging" />
+                </a>
+            </div>
+            
+            <div class="carousel-cell">
+                <a>
+                    <img src="images/slider/swarm.png" alt="slider-badging" />
+                </a>
+            </div>
+            <div class="carousel-cell">
+                <a>
+                    <img src="images/slider/wwafawdwg_livestream.png" alt="slider-badging" />
+                </a>
+            </div>
+            <div class="carousel-cell">
+                <a>
+                    <img src="images/slider/applemusiclive.png" alt="slider-badging" />
+                </a>
+            </div>
+            <div class="carousel-cell">
+                <a>
+                    <img src="images/slider/hte_disneyplus.png" alt="slider-badging" />
+                </a>
+            </div>
+        </div>
+
+     <!-- fin banners-->
+
+     <!--Inicio de entretenimiento-->
+
+    <div id="contenedor"></div>
+
+
+
+
+
+    </main>
+
+    <!-- Banner de cookies -->
+<div id="cookie-banner" style="
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #111827;
+  color: #ffffff;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+">
+  <span>Este sitio usa cookies de análisis. Aceptalas para habilitar Google Analytics.</span>
+  <button onclick="acceptCookies()" style="
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  ">Aceptar</button>
+</div>
+
+<!-- Script de consentimiento y GA -->
+<script>
+  function acceptCookies() {
+    localStorage.setItem('cookiesAccepted', 'true');
+    loadAnalytics();
+    document.getElementById('cookie-banner').style.display = 'none';
+  }
+
+  function loadAnalytics() {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-8VRV0Y4Z5P'; // Reemplazá con tu ID GA4
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    window.gtag = gtag;
+
+    gtag('js', new Date());
+    gtag('config', 'G-8VRV0Y4Z5P'); // Reemplazá también acá
+  }
+
+  if (localStorage.getItem('cookiesAccepted') === 'true') {
+    loadAnalytics();
+    document.getElementById('cookie-banner').style.display = 'none';
+  }
+</script>
+
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+          <span class="close" id="closeBtn">&times;</span>
+          <h2>¡Ahora tenemos Instagram!</h2>
+          <p>Subimos actualizaciones de nuevos contenidos y anuncios. ¡No te los pierdas!</p>
+          <p>EilishTV!</p>
+          <a href="https://www.instagram.com/eilishtvwebsite" target="_blank" class="popup-button">Ir a Instagram</a>
+        </div>
+      </div>
+      
+      <footer style="background-color: #090b13; color: #fff; padding: 2rem 1rem; font-family: sans-serif; margin-top: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          
+          <div style="flex: 1 1 300px;">
+            <h2 style="margin: 0 0 0.5rem; font-size: 1.1rem;">EilishTV!</h2>
+            <p style="margin: 0; font-size: 0.9rem;">&copy; 2025 Proyecto personal sin fines comerciales.</p>
+          </div>
+      
+          <div style="flex: 1 1 300px; text-align: right;">
+            <a href="https://www.instagram.com/eilishtvwebsite/" style="color: #bbb; margin-left: 1rem; text-decoration: none; font-size: 0.9rem;">Instagram</a>
+            <a href="https://eilishtv.github.io/home" target="_blank" style="color: #bbb; margin-left: 1rem; text-decoration: none; font-size: 0.9rem;">Sitio Web</a>
+            <a href="https://x.com/ccxannyv?s=11&t=rKBTa20zvrb5aXc0rHdxKQ" target="_blank" style="color: #bbb; margin-left: 1rem; text-decoration: none; font-size: 0.9rem;">Twitter X</a>
+          </div>
+      
+        </div>
+      </footer>
+      
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <script src="home.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

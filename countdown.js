@@ -1,7 +1,7 @@
 // contador 
 
 // Fecha de la próxima fiesta (año, mes-1, día, hora, minuto)
-const evento = new Date("2025-08-12T17:07:00").getTime();
+const evento = new Date("2025-12-14T17:07:00").getTime();
 
 const interval = setInterval(() => {
   const ahora = new Date().getTime();
