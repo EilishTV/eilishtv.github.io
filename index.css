@@ -194,7 +194,7 @@ main::after {
 }
 
 .carousel-cell {
-    width: 90%;
+    width: 90vw;
     border-radius: 4px;
     cursor: pointer;
     position: relative;
@@ -203,7 +203,6 @@ main::after {
 
 .carousel-cell a {
     border-radius: 4px;
-    box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px, rgb(0 0 0 / 73%) 0px 16px 10px -10px;
     cursor: pointer;
     display: block;
     position: relative;
@@ -215,7 +214,6 @@ main::after {
     height: 100%;
     border-radius: 5px;
 }
-
 
 
 .viewers {
@@ -312,8 +310,6 @@ main::after {
 }
 
 .recWrap:hover {
-    box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
-                rgb(0 0 0 / 73%) 0px 16px 10px -10px;
     transform: scale(1.05);
     border-color: rgba(249, 249, 249, 0.8);
     
