@@ -59,15 +59,23 @@ if (logoutBtn) {
     });
 }
 
+
 /* =========================
-   PERFIL ACTIVO EN NAV (FIX F5)
+   PERFIL ACTIVO EN NAV (SAFE FIX)
+   - no pisa Firebase
+   - sirve como fallback F5
+   - no genera race conditions
 ========================= */
-document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", async () => {
+
     const navAvatars = document.querySelectorAll(".navAvatar");
     const userImg = document.querySelector(".userImg");
     const navName = document.getElementById("navProfileName");
 
-    // Intentar cargar desde localStorage apenas abre la web
+    // =========================
+    // 🔥 FALLBACK LOCAL STORAGE
+    // =========================
     const storedName = localStorage.getItem("navProfileName");
     const storedAvatar = localStorage.getItem("navProfileAvatar");
 
@@ -80,26 +88,33 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userImg) userImg.src = storedAvatar;
     }
 
-    // Definir la función global para que otros scripts (como el overlay o profile) puedan actualizar el Nav
-    function waitForElements() {
-    return new Promise((resolve) => {
-        const check = () => {
-            const navAvatars = document.querySelectorAll(".navAvatar");
-            const userImg = document.querySelector(".userImg");
-            const navName = document.getElementById("navProfileName");
+    // =========================
+    // 🔥 EXPORT GLOBAL SAFE WAIT
+    // =========================
+    window.waitForElements = function () {
+        return new Promise((resolve) => {
 
-            if (navAvatars.length || userImg || navName) {
-                resolve({ navAvatars, userImg, navName });
-            } else {
+            const check = () => {
+                const navAvatars = document.querySelectorAll(".navAvatar");
+                const userImg = document.querySelector(".userImg");
+                const navName = document.getElementById("navProfileName");
+
+                if (navName && userImg) {
+                    return resolve({
+                        navAvatars,
+                        userImg,
+                        navName
+                    });
+                }
+
                 requestAnimationFrame(check);
-            }
-        };
+            };
 
-        check();
-    });
-}
+            check();
+        });
+    };
+
 });
-
 /* =========================
    ABRIR OVERLAY DE PERFILES
 ========================= */

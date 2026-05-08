@@ -220,7 +220,9 @@ onAuthStateChanged(auth, async (user) => {
 
     const path = window.location.pathname;
 
-    // ❌ no user
+    // =========================
+    // ❌ NO USER
+    // =========================
     if (!user) {
         console.log("[AUTH] no user");
 
@@ -231,33 +233,60 @@ onAuthStateChanged(auth, async (user) => {
         return;
     }
 
-    // ❌ email no verificado
+    // =========================
+    // ❌ EMAIL NO VERIFICADO
+    // =========================
     if (!user.emailVerified && !path.includes("verify")) {
         console.log("[AUTH] email not verified");
         window.location.href = "/identify/verify/";
         return;
     }
 
-    // 🔥 esperar perfil desde Firestore
-    const profile = await getUserProfile(user.uid);
+    try {
 
-    console.log("[AUTH] profile:", profile);
+        // =========================
+        // 🔥 PERFIL FIRESTORE
+        // =========================
+        const profile = await getUserProfile(user.uid);
 
-    // 🔥 esperar DOM del nav antes de pintar (FIX REAL DEL BUG)
-    await waitForNav();
+        console.log("[AUTH] profile:", profile);
 
-    // 🔥 actualizar UI
-    await updateNavUI(user, profile);
+        // =========================
+        // 🔥 ESPERAR NAV (DOM READY REAL)
+        // =========================
+        await waitForNav();
 
-    console.log("[NAV CHECK]", {
-    nameEl: document.getElementById("navProfileName"),
-    value: document.getElementById("navProfileName")?.textContent,
-    imgs: document.querySelectorAll(".navAvatar, .userImg").length
+        // =========================
+        // 🔥 APLICAR UI NAV
+        // =========================
+        await updateNavUI(user, profile);
+
+        // =========================
+        // DEBUG CONTROLADO
+        // =========================
+        const nameEl = document.getElementById("navProfileName");
+
+        console.log("[NAV CHECK]", {
+            nameEl,
+            value: nameEl?.textContent,
+            imgs: document.querySelectorAll(".navAvatar, .userImg").length
+        });
+
+        console.log("[AUTH] nav updated");
+
+        // =========================
+        // 🔥 FIX EXTRA (evita “User” fantasma en render lento)
+        // =========================
+        requestAnimationFrame(() => {
+            if (nameEl && (nameEl.textContent === "User" || !nameEl.textContent)) {
+                nameEl.textContent = profile?.name || user.displayName || "User";
+            }
+        });
+
+    } catch (err) {
+        console.error("[AUTH] error loading profile/nav", err);
+    }
 });
-
-    console.log("[AUTH] nav updated");
-});
-
 
 // =======================================
 // LOGOUT
