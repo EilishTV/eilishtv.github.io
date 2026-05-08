@@ -10,18 +10,24 @@ let closeTimer;
 
 // Dropdown hover
 if (userMenu && dropDown) {
-    userMenu.addEventListener("mouseenter", () => {
+    const showMenu = () => {
         clearTimeout(closeTimer);
         dropDown.style.display = "flex";
         if (profileArrow) profileArrow.style.opacity = "1";
-    });
+    };
 
-    userMenu.addEventListener("mouseleave", () => {
+    const hideMenu = () => {
         closeTimer = setTimeout(() => {
             dropDown.style.display = "none";
             if (profileArrow) profileArrow.style.opacity = "0";
         }, 150);
-    });
+    };
+
+    userMenu.addEventListener("mouseenter", showMenu);
+    userMenu.addEventListener("mouseleave", hideMenu);
+
+    dropDown.addEventListener("mouseenter", showMenu);
+    dropDown.addEventListener("mouseleave", hideMenu);
 }
 
 /* =========================
@@ -81,9 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         navAvatars.forEach(img => img.src = avatar);
         if (userImg) userImg.src = avatar;
 
-        // Guardar para que no se borre al dar F5
-        localStorage.setItem("navProfileAvatar", avatar);
-        localStorage.setItem("navProfileName", name);
+   
     };
 });
 

@@ -64,6 +64,53 @@ function clearError() {
 
 
 // =======================================
+// FIRESTORE PROFILE FETCH
+// =======================================
+
+async function getUserProfile(uid) {
+    const profilesRef = collection(db, "users", uid, "profiles");
+    const q = query(profilesRef, where("main", "==", true));
+    const snap = await getDocs(q);
+
+    if (!snap.empty) {
+        return snap.docs[0].data();
+    }
+
+    return {
+        name: "User",
+        avatar: "/images/avatars/default.png"
+    };
+}
+
+
+// =======================================
+// NAV UI SYNC (FIREBASE ONLY)
+// =======================================
+
+function updateNavUI(user, profile) {
+    const navAvatars = document.querySelectorAll(".navAvatar");
+    const userImg = document.querySelector(".userImg");
+    const navName = document.getElementById("navProfileName");
+    const emailEl = document.getElementById("userEmail");
+
+    const name = profile?.name || user.displayName || "User";
+    const avatar = profile?.avatar || user.photoURL || "/images/avatars/default.png";
+
+    if (navName) navName.textContent = name;
+
+    navAvatars.forEach(img => {
+        if (img) img.src = avatar;
+    });
+
+    if (userImg) userImg.src = avatar;
+
+    if (emailEl && user?.email) {
+        emailEl.textContent = user.email;
+    }
+}
+
+
+// =======================================
 // SIGN UP
 // =======================================
 
@@ -75,7 +122,7 @@ registerBtn?.addEventListener("click", async () => {
 
     try {
 
-        const email = localStorage.getItem("signupEmail");
+        const email = document.getElementById("email")?.value.trim();
         const password = document.getElementById("password")?.value.trim();
         const name = document.getElementById("userName")?.value.trim();
 
@@ -94,7 +141,7 @@ registerBtn?.addEventListener("click", async () => {
 
         await updateProfile(user, {
             displayName: name,
-            photoURL: "/images/avatars/avatar1.jpeg"
+            photoURL: "/images/avatars/default.png"
         });
 
         await sendEmailVerification(user);
@@ -103,19 +150,17 @@ registerBtn?.addEventListener("click", async () => {
         const profileDoc = doc(profilesRef);
 
         await setDoc(profileDoc, {
-            name: name,
-            avatar: "/images/avatars/avatar1.jpeg",
+            name,
+            avatar: "/images/avatars/default.png",
             main: true,
             createdAt: new Date()
         });
-
-        localStorage.removeItem("signupEmail");
 
         window.location.href = "/identify/verify/";
 
     } catch (err) {
 
-        console.error("Signup error:", err);
+        console.error(err);
 
         if (err.code === "auth/email-already-in-use") {
             showError("This email is already registered.");
@@ -160,44 +205,38 @@ loginBtn?.addEventListener("click", async () => {
         window.location.href = "/browse/";
 
     } catch (err) {
-
-        console.error("Login error:", err);
+        console.error(err);
         showError("Incorrect email or password.");
-
     }
 
 });
 
 
 // =======================================
-// AUTH STATE (BÁSICO)
+// AUTH STATE (SOURCE OF TRUTH)
 // =======================================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
-    // 🔥 guardar user globalmente para toda la app
     window.currentUser = user || null;
 
     const path = window.location.pathname;
 
-    if (user) {
-
-        // si no verificó email → lo mandás a verify
-        if (!user.emailVerified && !path.includes("verify")) {
-            window.location.href = "/identify/verify/";
-            return;
-        }
-
-    } else {
-
-        // si no está logueado → bloquear zonas privadas
+    if (!user) {
         if (path.startsWith("/browse") || path.startsWith("/profile")) {
             window.location.href = "/identify/";
-            return;
         }
-
+        return;
     }
 
+    if (!user.emailVerified && !path.includes("verify")) {
+        window.location.href = "/identify/verify/";
+        return;
+    }
+
+    const profile = await getUserProfile(user.uid);
+
+    updateNavUI(user, profile);
 });
 
 
@@ -206,19 +245,10 @@ onAuthStateChanged(auth, (user) => {
 // =======================================
 
 document.addEventListener("click", async (e) => {
-
     if (e.target.id === "logoutBtn") {
-
         await signOut(auth);
-
-        localStorage.removeItem("navProfileName");
-        localStorage.removeItem("navProfileAvatar");
-        sessionStorage.removeItem("profileSelected");
-
         window.location.href = "/identify/";
-
     }
-
 });
 
 
@@ -227,8 +257,3 @@ document.addEventListener("click", async (e) => {
 // =======================================
 
 export { auth };
-
-const emailEl = document.getElementById("userEmail");
-if(emailEl && user.email){
-    emailEl.textContent = user.email;
-}
