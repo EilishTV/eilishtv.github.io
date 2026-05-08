@@ -44,7 +44,7 @@ a {
 }
 
 
-.profileOverlay img {
+.profileOverlay {
   width: 80px;        /* tamaño chico */
   height: auto;
   display: block;
@@ -124,6 +124,7 @@ a {
 
 .profileName {
     font-size: 14px;
+    padding: 15px;
     text-align: center;
 }
 

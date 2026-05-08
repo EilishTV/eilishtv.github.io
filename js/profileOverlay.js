@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             sessionStorage.setItem("profileSelected", "true");
 
-            overlay.style.display = "none";
+            window.location.href = "/browse/";
 
             if (window.updateNavAvatars) {
                 window.updateNavAvatars(
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "true"
                 );
 
-                overlay.style.display = "none";
+                window.location.href = "/browse/";
 
                 if (window.updateNavAvatars) {
                     window.updateNavAvatars(
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "true"
                     );
 
-                    overlay.style.display = "none";
+                    window.location.href = "/browse/";
 
                     if (window.updateNavAvatars) {
                         window.updateNavAvatars(
@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             sessionStorage.removeItem("profileSelected");
 
-            overlay.style.display = "none";
+            window.location.href = "/browse/";
 
             return;
         }
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
-            overlay.style.display = "none";
+            window.location.href = "/browse/";
 
             return;
         }
