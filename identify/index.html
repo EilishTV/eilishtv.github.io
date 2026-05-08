@@ -4,82 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EilishTV!</title>
+    <!-- Tu CSS original -->
+    <link rel="stylesheet" href="../css/identify.css">
+    <!-- Font Awesome por si usas iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* 1. Reset y prevención de scroll en Safari */
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background-color: #000;
-            overflow: hidden;
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            position: fixed; /* Evita que el navegador de Instagram intente scrollear */
-        }
-
+        /* --- ESTILOS DE MANTENIMIENTO (SÓLO PARA EL OVERLAY) --- */
         #maintenance-overlay {
             display: flex; 
             position: fixed;
             top: 0; left: 0; 
             width: 100%; height: 100%;
-            z-index: 1000;
+            z-index: 99999;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: white;
+            background-color: #000;
+            font-family: sans-serif;
         }
 
-        /* Capa de fondo optimizada para evitar crasheos de memoria */
-        .bg-layer {
+        .maint-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://imglink.cc/cdn/dbsi9yYN-O.png');
+            background-image: url('https://imglink.cc/cdn/dbsi9yYN-O.png'); /* Desktop */
             background-size: cover;
             background-position: center;
             z-index: -1;
-            opacity: 0.8;
         }
 
         @media (max-width: 768px) {
-            .bg-layer { background-image: url('https://imglink.cc/cdn/CoWSxtqNhe.png'); }
+            .maint-bg { background-image: url('https://imglink.cc/cdn/CoWSxtqNhe.png'); } /* Mobile */
         }
 
-        .maint-card { width: 90%; max-width: 450px; z-index: 2; }
-
-        #countdown { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        #countdown { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .time-box {
             background: rgba(0, 0, 0, 0.7); 
-            padding: 8px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 10px;
             min-width: 60px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .time-box span { display: block; font-size: 1.3rem; font-weight: bold; }
-        .time-box label { font-size: 0.55rem; text-transform: uppercase; opacity: 0.7; }
+        .time-box span { display: block; font-size: 1.5rem; font-weight: bold; }
+        .time-box label { font-size: 0.6rem; text-transform: uppercase; }
 
         .code-inputs { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        
         .code-box {
             width: 45px; height: 55px;
-            background: #000; 
-            border: 2px solid #fff;
+            background: rgba(0, 0, 0, 0.8); 
+            border: 2px solid white;
             border-radius: 8px;
             text-align: center;
-            font-size: 16px; /* Mínimo 16px para evitar zoom automático en iPhone */
-            color: #fff;
+            font-size: 16px; /* Evita zoom en iPhone */
+            color: white;
             outline: none;
-            
-            /* Solución al amarillo: prefijo + estándar */
             -webkit-appearance: none;
             appearance: none;
+        }
+
+        /* --- PREVENCIÓN DE VISUALIZACIÓN --- */
+        #original-content {
+            display: none; /* Oculto hasta que pongan el código */
         }
     </style>
 </head>
 
-<body>
+<body style="margin:0; background-color:#000;">
+
+    <!-- 1. CAPA DE MANTENIMIENTO -->
     <div id="maintenance-overlay">
-        <div class="bg-layer"></div>
-        <div class="maint-card">
+        <div class="maint-bg"></div>
+        <div style="z-index: 2; width: 90%; max-width: 400px;">
             <div id="countdown">
                 <div class="time-box"><span id="days">00</span><label>Días</label></div>
                 <div class="time-box"><span id="hours">00</span><label>Hrs</label></div>
@@ -87,77 +84,94 @@
                 <div class="time-box"><span id="seconds">00</span><label>Seg</label></div>
             </div>
 
-            <div class="code-group">
-                <p style="font-size: 0.8rem; margin-bottom: 5px; text-shadow: 1px 1px 3px #000;">Access Code</p>
-                <div class="code-inputs">
-                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                </div>
+            <p style="font-size: 0.8rem; margin-bottom: 10px;">ACCESS CODE</p>
+            <div class="code-inputs">
+                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
             </div>
         </div>
     </div>
 
-    <!-- Contenido que se mostrará al desbloquear -->
-    <section id="main-site" style="display:none;">
-        <!-- Aquí va tu contenido original del hero, header, etc. -->
-    </section>
+    <!-- 2. TU CONTENIDO ORIGINAL (INTACTO) -->
+    <div id="original-content">
+        <!-- TOPBAR CON REDIRECCIÓN A BROWSE -->
+        <header class="topBar">
+            <div class="topbar-content" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+                <a href="../browse" style="text-decoration: none;">
+                    <img src="../images/extras/logo.png" class="logo" alt="EilishTV" style="height: 40px;">
+                </a>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <a href="login/" class="loginLink">Log in</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <section class="hero">
+            <img src="../images/extras/logo.png" class="logo" alt="EilishTV">
+            <h1 class="title">
+                Exclusive shows, movies, and documentaries from Billie Eilish and more.
+            </h1>
+            <p class="price">Completely free</p>
+            <p class="enter">Enter your email to get started.</p>
+
+            <div class="cta">
+                <input type="email" id="emailInput" placeholder="Enter your email">
+                <button id="startBtn">Start</button>
+            </div>
+        </section>
+    </div>
 
     <script>
         const SECRET_CODE = "1201";
         const overlay = document.getElementById('maintenance-overlay');
+        const content = document.getElementById('original-content');
+        const inputs = document.querySelectorAll('.code-box');
 
-        function unlockPage() {
+        function unlock() {
             overlay.style.display = 'none';
+            content.style.display = 'block';
             document.body.style.overflow = 'auto';
-            document.body.style.position = 'static';
             
-            // Carga diferida de scripts pesados
+            // Cargar tu JS original solo al desbloquear
             const script = document.createElement('script');
             script.src = "../js/identify.js";
             document.body.appendChild(script);
-            
-            // Mostrar el sitio
-            const mainSite = document.getElementById('main-site');
-            if(mainSite) mainSite.style.display = 'block';
         }
 
+        // Lógica de los cuadritos
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (input.value.length > 1) input.value = input.value.slice(-1);
+                if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
+                
+                let currentCode = "";
+                inputs.forEach(i => currentCode += i.value);
+                if (currentCode === SECRET_CODE) unlock();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === "Backspace" && !input.value && index > 0) inputs[index - 1].focus();
+            });
+        });
+
+        // Timer
         function updateTimer() {
             const now = new Date();
             const target = new Date();
             target.setDate(now.getDate() + (6 - now.getDay())); 
             target.setHours(0, 0, 0, 0);
             const diff = target - now;
-
-            if (diff <= 0) { unlockPage(); return; }
+            if (diff <= 0) { unlock(); return; }
 
             document.getElementById('days').textContent = Math.floor(diff / 86400000).toString().padStart(2, '0');
             document.getElementById('hours').textContent = Math.floor((diff / 3600000) % 24).toString().padStart(2, '0');
             document.getElementById('minutes').textContent = Math.floor((diff / 60000) % 60).toString().padStart(2, '0');
             document.getElementById('seconds').textContent = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
         }
-
         setInterval(updateTimer, 1000);
         updateTimer();
-
-        const inputs = document.querySelectorAll('.code-box');
-        inputs.forEach((input, index) => {
-            input.addEventListener('input', (e) => {
-                if (input.value.length > 1) input.value = input.value.slice(-1);
-                if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
-                
-                let code = "";
-                inputs.forEach(i => code += i.value);
-                if (code === SECRET_CODE) unlockPage();
-            });
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === "Backspace" && !input.value && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
-        });
     </script>
 </body>
 </html>
