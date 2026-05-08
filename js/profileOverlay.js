@@ -1,101 +1,372 @@
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { 
+    getAuth, 
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Tu configuración de Firebase (Asegúrate de que coincida con auth.js)
+import { 
+    getFirestore, 
+    collection, 
+    getDocs 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ============================================
+// FIREBASE
+// ============================================
 const firebaseConfig = { 
-    apiKey: "AIzaSyC3x7H9-JliDqEha3P-Ne_X9FyIFmxw7ec",
-    authDomain: "eilishtv-935ee.firebaseapp.com",
-    projectId: "eilishtv-935ee",
-    storageBucket: "eilishtv-935ee.firebasestorage.app",
-    messagingSenderId: "95065190642",
-    appId: "1:95065190642:web:644917173b2221b66b07c8"
+    /* tus credenciales */
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+const app = !getApps().length
+    ? initializeApp(firebaseConfig)
+    : getApps()[0];
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// ============================================
+// DOM READY
+// ============================================
 document.addEventListener("DOMContentLoaded", () => {
+
     const overlay = document.getElementById("profileOverlay");
     const profilesContainer = document.getElementById("profiles");
 
     if (!overlay || !profilesContainer) return;
 
-    async function showProfilesOverlay(user) {
-        overlay.style.display = "flex";
-        profilesContainer.innerHTML = "<p>Cargando perfiles...</p>";
+    // ============================================
+    // FALLBACK VISUAL (NUNCA QUEDA VACÍO)
+    // ============================================
+    function renderFallbackProfile() {
+
+        profilesContainer.innerHTML = "";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "profileWrapper";
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.style.backgroundImage = `url(/images/avatars/avatar1.jpeg)`;
+        avatar.style.backgroundSize = "cover";
+        avatar.style.backgroundPosition = "center";
+
+        const name = document.createElement("div");
+        name.className = "profileName";
+        name.textContent = "Perfil";
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(name);
+
+        wrapper.addEventListener("click", () => {
+
+            localStorage.setItem("navProfileName", "Perfil");
+            localStorage.setItem(
+                "navProfileAvatar",
+                "/images/avatars/avatar1.jpeg"
+            );
+
+            sessionStorage.setItem("profileSelected", "true");
+
+            overlay.style.display = "none";
+
+            if (window.updateNavAvatars) {
+                window.updateNavAvatars(
+                    "/images/avatars/avatar1.jpeg",
+                    "Perfil"
+                );
+            }
+        });
+
+        profilesContainer.appendChild(wrapper);
+    }
+
+    // ============================================
+    // GUARDAR PERFIL LOCAL
+    // ============================================
+    function saveLocalProfile(profile) {
+
+        localStorage.setItem(
+            "cachedProfile",
+            JSON.stringify(profile)
+        );
+
+        localStorage.setItem(
+            "navProfileName",
+            profile.name
+        );
+
+        localStorage.setItem(
+            "navProfileAvatar",
+            profile.avatar
+        );
+    }
+
+    // ============================================
+    // CARGAR PERFIL LOCAL
+    // ============================================
+    function getLocalProfile() {
 
         try {
-            const profilesRef = collection(db, "users", user.uid, "profiles");
+            return JSON.parse(
+                localStorage.getItem("cachedProfile")
+            );
+        } catch {
+            return null;
+        }
+    }
+
+    // ============================================
+    // MOSTRAR OVERLAY
+    // ============================================
+    async function showProfilesOverlay(user) {
+
+        overlay.style.display = "flex";
+
+        profilesContainer.innerHTML = `
+            <p style="color:white;">Cargando perfiles...</p>
+        `;
+
+        try {
+
+            const profilesRef = collection(
+                db,
+                "users",
+                user.uid,
+                "profiles"
+            );
+
             const snapshot = await getDocs(profilesRef);
-            const profiles = snapshot.docs.map(doc => doc.data());
+
+            let profiles = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            // ============================================
+            // SI NO HAY NINGÚN PERFIL
+            // ============================================
+            if (!profiles.length) {
+
+                const cached = getLocalProfile();
+
+                if (cached) {
+                    profiles = [cached];
+                } else {
+
+                    renderFallbackProfile();
+
+                    // BOTÓN CREAR PERFIL
+                    const addProfile = document.createElement("div");
+                    addProfile.className = "profileWrapper addProfile";
+
+                    addProfile.innerHTML = `
+                        <div class="avatar addAvatar">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="profileName">Crear perfil</div>
+                    `;
+
+                    addProfile.addEventListener("click", () => {
+                        window.location.href = "/account/#profiles";
+                    });
+
+                    profilesContainer.appendChild(addProfile);
+
+                    return;
+                }
+            }
 
             profilesContainer.innerHTML = "";
 
-            // 1. Renderizar perfiles
-            profiles.forEach(profile => {
+            // ============================================
+            // SOLO 1 PERFIL
+            // ============================================
+            const profile = profiles[0];
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "profileWrapper";
+
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+
+            const avatarUrl =
+                profile.avatar ||
+                "/images/avatars/avatar1.jpeg";
+
+            avatar.style.backgroundImage = `url(${avatarUrl})`;
+            avatar.style.backgroundSize = "cover";
+            avatar.style.backgroundPosition = "center";
+
+            const name = document.createElement("div");
+            name.className = "profileName";
+            name.textContent = profile.name || "Perfil";
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(name);
+
+            wrapper.addEventListener("click", () => {
+
+                saveLocalProfile({
+                    name: profile.name || "Perfil",
+                    avatar: avatarUrl
+                });
+
+                sessionStorage.setItem(
+                    "profileSelected",
+                    "true"
+                );
+
+                overlay.style.display = "none";
+
+                if (window.updateNavAvatars) {
+                    window.updateNavAvatars(
+                        avatarUrl,
+                        profile.name || "Perfil"
+                    );
+                }
+            });
+
+            profilesContainer.appendChild(wrapper);
+
+            // ============================================
+            // BOTÓN EDITAR
+            // ============================================
+            let editBtn = document.querySelector(".editProfileBtn");
+
+            if (!editBtn) {
+
+                editBtn = document.createElement("button");
+
+                editBtn.className = "editProfileBtn";
+
+                editBtn.textContent = "Editar perfil";
+
+                editBtn.addEventListener("click", () => {
+                    window.location.href = "/profile/";
+                });
+
+                overlay.appendChild(editBtn);
+            }
+
+        } catch (error) {
+
+            console.error("Error cargando perfiles:", error);
+
+            // ============================================
+            // FALLBACK SI FIRESTORE FALLA
+            // ============================================
+            const cached = getLocalProfile();
+
+            profilesContainer.innerHTML = "";
+
+            if (cached) {
+
                 const wrapper = document.createElement("div");
                 wrapper.className = "profileWrapper";
 
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
-                const avatarUrl = profile.avatar || "/images/avatars/avatar1.jpeg";
 
-                avatar.style.backgroundImage = `url(${avatarUrl})`;
+                avatar.style.backgroundImage = `
+                    url(${cached.avatar})
+                `;
+
                 avatar.style.backgroundSize = "cover";
                 avatar.style.backgroundPosition = "center";
 
                 const name = document.createElement("div");
                 name.className = "profileName";
-                name.textContent = profile.name;
+                name.textContent = cached.name;
 
                 wrapper.appendChild(avatar);
                 wrapper.appendChild(name);
 
                 wrapper.addEventListener("click", () => {
-                    if (window.updateNavAvatars) {
-                        window.updateNavAvatars(avatarUrl, profile.name);
-                    }
-                    sessionStorage.setItem("profileSelected", "true");
-                    // Guardamos el perfil actual para que persista en el celu
-                    localStorage.setItem("navProfileName", profile.name);
-                    localStorage.setItem("navProfileAvatar", avatarUrl);
-                    
+
+                    sessionStorage.setItem(
+                        "profileSelected",
+                        "true"
+                    );
+
                     overlay.style.display = "none";
+
+                    if (window.updateNavAvatars) {
+                        window.updateNavAvatars(
+                            cached.avatar,
+                            cached.name
+                        );
+                    }
                 });
 
                 profilesContainer.appendChild(wrapper);
-            });
 
-            // 2. Botón Añadir (si hay menos de 5)
-            if (profiles.length < 5) {
-                const addProfile = document.createElement("div");
-                addProfile.className = "profileWrapper addProfile";
-                addProfile.innerHTML = `
-                    <div class="avatar addAvatar"><i class="fas fa-plus"></i></div>
-                    <div class="profileName">Añadir</div>
-                `;
-                addProfile.onclick = () => window.location.href = "/account/#profiles";
-                profilesContainer.appendChild(addProfile);
+            } else {
+
+                renderFallbackProfile();
             }
-
-        } catch (error) {
-            console.error("Error cargando perfiles:", error);
-            profilesContainer.innerHTML = "<p>Error al cargar perfiles. Reintenta.</p>";
         }
     }
 
+    // ============================================
+    // AUTH
+    // ============================================
     onAuthStateChanged(auth, async (user) => {
+
         if (!user) {
+
             sessionStorage.removeItem("profileSelected");
+
+            overlay.style.display = "none";
+
             return;
         }
 
-        if (sessionStorage.getItem("profileSelected") === "true") {
+        // ============================================
+        // SI YA HAY PERFIL SELECCIONADO
+        // ============================================
+        if (
+            sessionStorage.getItem("profileSelected") === "true"
+        ) {
+
+            const savedAvatar =
+                localStorage.getItem("navProfileAvatar");
+
+            const savedName =
+                localStorage.getItem("navProfileName");
+
+            if (
+                savedAvatar &&
+                savedName &&
+                window.updateNavAvatars
+            ) {
+
+                window.updateNavAvatars(
+                    savedAvatar,
+                    savedName
+                );
+            }
+
             overlay.style.display = "none";
+
             return;
         }
+
+        await showProfilesOverlay(user);
+    });
+
+    // ============================================
+    // ABRIR MANUALMENTE
+    // ============================================
+    const openProfilesBtn =
+        document.getElementById("openProfiles");
+
+    openProfilesBtn?.addEventListener("click", async () => {
+
+        sessionStorage.removeItem("profileSelected");
+
+        const user = auth.currentUser;
+
+        if (!user) return;
 
         await showProfilesOverlay(user);
     });
