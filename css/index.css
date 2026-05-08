@@ -107,11 +107,6 @@ a {
     justify-content: center;
     font-size: 40px;
     color: white;
-
-    /* AGREGA ESTAS 3 LÍNEAS PARA QUITAR EL BUG */
-    background-size: cover;      /* Hace que la foto cubra todo el círculo */
-    background-position: center;  /* Centra la foto */
-    overflow: hidden;             /* CORTA lo que se sale del círculo (esto es lo más importante) */
 }
 
 .addAvatar {
