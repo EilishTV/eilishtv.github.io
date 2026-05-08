@@ -212,31 +212,50 @@ loginBtn?.addEventListener("click", async () => {
 });
 
 
-// =======================================
-// AUTH STATE (SOURCE OF TRUTH)
-// =======================================
-
 onAuthStateChanged(auth, async (user) => {
+
+    console.log("[AUTH] user:", user);
 
     window.currentUser = user || null;
 
     const path = window.location.pathname;
 
+    // ❌ no user
     if (!user) {
+        console.log("[AUTH] no user");
+
         if (path.startsWith("/browse") || path.startsWith("/profile")) {
             window.location.href = "/identify/";
         }
+
         return;
     }
 
+    // ❌ email no verificado
     if (!user.emailVerified && !path.includes("verify")) {
+        console.log("[AUTH] email not verified");
         window.location.href = "/identify/verify/";
         return;
     }
 
+    // 🔥 esperar perfil desde Firestore
     const profile = await getUserProfile(user.uid);
 
-    updateNavUI(user, profile);
+    console.log("[AUTH] profile:", profile);
+
+    // 🔥 esperar DOM del nav antes de pintar (FIX REAL DEL BUG)
+    await waitForNav();
+
+    // 🔥 actualizar UI
+    await updateNavUI(user, profile);
+
+    console.log("[NAV CHECK]", {
+    nameEl: document.getElementById("navProfileName"),
+    value: document.getElementById("navProfileName")?.textContent,
+    imgs: document.querySelectorAll(".navAvatar, .userImg").length
+});
+
+    console.log("[AUTH] nav updated");
 });
 
 
@@ -257,3 +276,20 @@ document.addEventListener("click", async (e) => {
 // =======================================
 
 export { auth };
+
+function waitForNav() {
+    return new Promise((resolve) => {
+        const check = () => {
+            const navName = document.getElementById("navProfileName");
+            const userImg = document.querySelector(".userImg");
+
+            if (navName && userImg) {
+                return resolve();
+            }
+
+            requestAnimationFrame(check);
+        };
+
+        check();
+    });
+}
