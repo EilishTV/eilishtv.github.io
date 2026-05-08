@@ -1,21 +1,57 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>EilishTV!</title>
+
     <!-- Tu CSS original -->
     <link rel="stylesheet" href="../css/identify.css">
-    <!-- Font Awesome por si usas iconos -->
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
-        /* --- ESTILOS DE MANTENIMIENTO (SÓLO PARA EL OVERLAY) --- */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background-color: #000;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            touch-action: manipulation;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        input,
+        button {
+            font-family: inherit;
+        }
+
+        /* --- ESTILOS DE MANTENIMIENTO --- */
         #maintenance-overlay {
-            display: flex; 
+            display: flex;
             position: fixed;
-            top: 0; left: 0; 
-            width: 100%; height: 100%;
+            inset: 0;
+            width: 100%;
+            height: 100dvh;
             z-index: 99999;
             flex-direction: column;
             justify-content: center;
@@ -23,85 +59,186 @@
             text-align: center;
             color: white;
             background-color: #000;
-            font-family: sans-serif;
+            overflow: hidden;
+            padding: 20px;
         }
 
         .maint-bg {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://imglink.cc/cdn/dbsi9yYN-O.png'); /* Desktop */
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://imglink.cc/cdn/dbsi9yYN-O.png');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             z-index: -1;
+            transform: scale(1.02);
         }
 
         @media (max-width: 768px) {
-            .maint-bg { background-image: url('https://imglink.cc/cdn/CoWSxtqNhe.png'); } /* Mobile */
+            .maint-bg {
+                background-image: url('https://imglink.cc/cdn/CoWSxtqNhe.png');
+                background-position: center top;
+            }
         }
 
-        #countdown { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        #countdown {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
         .time-box {
-            background: rgba(0, 0, 0, 0.7); 
+            background: rgba(0, 0, 0, 0.72);
             padding: 10px;
-            border-radius: 10px;
-            min-width: 60px;
+            border-radius: 12px;
+            min-width: 65px;
+            backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .time-box span { display: block; font-size: 1.5rem; font-weight: bold; }
-        .time-box label { font-size: 0.6rem; text-transform: uppercase; }
 
-        .code-inputs { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .code-box {
-            width: 45px; height: 55px;
-            background: rgba(0, 0, 0, 0.8); 
-            border: 2px solid white;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px; /* Evita zoom en iPhone */
-            color: white;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
+        .time-box span {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1.2;
         }
 
-        /* --- PREVENCIÓN DE VISUALIZACIÓN --- */
+        .time-box label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .code-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: nowrap;
+        }
+
+        .code-box {
+            width: 50px;
+            height: 58px;
+            background: rgba(0, 0, 0, 0.82);
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: 0.2s ease;
+            caret-color: white;
+        }
+
+        .code-box:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.25);
+        }
+
+        .code-box::-webkit-outer-spin-button,
+        .code-box::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         #original-content {
-            display: none; /* Oculto hasta que pongan el código */
+            display: none;
+            min-height: 100dvh;
+        }
+
+        .loading-message,
+        .error-message {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .code-box {
+                width: 46px;
+                height: 54px;
+                font-size: 17px;
+            }
+
+            .time-box {
+                min-width: 60px;
+                padding: 8px;
+            }
         }
     </style>
 </head>
 
-<body style="margin:0; background-color:#000;">
+<body>
 
     <!-- 1. CAPA DE MANTENIMIENTO -->
     <div id="maintenance-overlay">
         <div class="maint-bg"></div>
-        <div style="z-index: 2; width: 90%; max-width: 400px;">
+
+        <div style="z-index: 2; width: 90%; max-width: 420px;">
             <div id="countdown">
-                <div class="time-box"><span id="days">00</span><label>Días</label></div>
-                <div class="time-box"><span id="hours">00</span><label>Hrs</label></div>
-                <div class="time-box"><span id="minutes">00</span><label>Min</label></div>
-                <div class="time-box"><span id="seconds">00</span><label>Seg</label></div>
+                <div class="time-box">
+                    <span id="days">00</span>
+                    <label>Días</label>
+                </div>
+
+                <div class="time-box">
+                    <span id="hours">00</span>
+                    <label>Hrs</label>
+                </div>
+
+                <div class="time-box">
+                    <span id="minutes">00</span>
+                    <label>Min</label>
+                </div>
+
+                <div class="time-box">
+                    <span id="seconds">00</span>
+                    <label>Seg</label>
+                </div>
             </div>
 
-            <p style="font-size: 0.8rem; margin-bottom: 10px;">ACCESS CODE</p>
+            <p style="font-size: 0.8rem; margin-bottom: 10px; letter-spacing: 1px;">
+                ACCESS CODE
+            </p>
+
             <div class="code-inputs">
-                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
-                <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="code-box">
+            </div>
+
+            <div class="loading-message" id="loading-message"></div>
+            <div class="error-message" id="error-message">
+                Ocurrió un error al cargar. Reintentando...
             </div>
         </div>
     </div>
 
-    <!-- 2. TU CONTENIDO ORIGINAL (INTACTO) -->
+    <!-- 2. TU CONTENIDO ORIGINAL -->
     <div id="original-content">
+
         <!-- TOPBAR CON REDIRECCIÓN A BROWSE -->
         <header class="topBar">
             <div class="topbar-content" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
                 <a href="../browse" style="text-decoration: none;">
                     <img src="../images/extras/logo.png" class="logo" alt="EilishTV" style="height: 40px;">
                 </a>
+
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <a href="login/" class="loginLink">Log in</a>
                 </div>
@@ -111,67 +248,201 @@
         <!-- HERO -->
         <section class="hero">
             <img src="../images/extras/logo.png" class="logo" alt="EilishTV">
+
             <h1 class="title">
                 Exclusive shows, movies, and documentaries from Billie Eilish and more.
             </h1>
+
             <p class="price">Completely free</p>
             <p class="enter">Enter your email to get started.</p>
 
             <div class="cta">
-                <input type="email" id="emailInput" placeholder="Enter your email">
-                <button id="startBtn">Start</button>
+                <input type="email" id="emailInput" placeholder="Enter your email" autocomplete="email">
+                <button id="startBtn" type="button">Start</button>
             </div>
         </section>
     </div>
 
     <script>
-        const SECRET_CODE = "1201";
-        const overlay = document.getElementById('maintenance-overlay');
-        const content = document.getElementById('original-content');
-        const inputs = document.querySelectorAll('.code-box');
+        (() => {
+            'use strict';
 
-        function unlock() {
-            overlay.style.display = 'none';
-            content.style.display = 'block';
-            document.body.style.overflow = 'auto';
-            
-            // Cargar tu JS original solo al desbloquear
-            const script = document.createElement('script');
-            script.src = "../js/identify.js";
-            document.body.appendChild(script);
-        }
+            const SECRET_CODE = '1201';
 
-        // Lógica de los cuadritos
-        inputs.forEach((input, index) => {
-            input.addEventListener('input', (e) => {
-                if (input.value.length > 1) input.value = input.value.slice(-1);
-                if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
-                
-                let currentCode = "";
-                inputs.forEach(i => currentCode += i.value);
-                if (currentCode === SECRET_CODE) unlock();
+            const overlay = document.getElementById('maintenance-overlay');
+            const content = document.getElementById('original-content');
+            const inputs = document.querySelectorAll('.code-box');
+            const errorMessage = document.getElementById('error-message');
+            const loadingMessage = document.getElementById('loading-message');
+
+            let unlocked = false;
+            let retryCount = 0;
+            const maxRetries = 3;
+
+            function safeShow(element, display = 'block') {
+                if (element) {
+                    element.style.display = display;
+                }
+            }
+
+            function safeHide(element) {
+                if (element) {
+                    element.style.display = 'none';
+                }
+            }
+
+            function unlock() {
+                if (unlocked) return;
+
+                unlocked = true;
+
+                safeHide(overlay);
+                safeShow(content, 'block');
+
+                document.body.style.overflowX = 'hidden';
+                document.body.style.overflowY = 'auto';
+
+                loadOriginalScript();
+            }
+
+            function loadOriginalScript() {
+                loadingMessage.textContent = 'Loading...';
+
+                const existingScript = document.querySelector('script[data-identify="true"]');
+                if (existingScript) return;
+
+                const script = document.createElement('script');
+                script.src = '../js/identify.js';
+                script.defer = true;
+                script.dataset.identify = 'true';
+
+                script.onload = () => {
+                    loadingMessage.textContent = '';
+                    safeHide(errorMessage);
+                    console.log('identify.js cargado correctamente');
+                };
+
+                script.onerror = () => {
+                    retryCount++;
+                    console.error('Error cargando identify.js');
+
+                    if (retryCount <= maxRetries) {
+                        loadingMessage.textContent = `Retrying... (${retryCount}/${maxRetries})`;
+
+                        setTimeout(() => {
+                            loadOriginalScript();
+                        }, 1500);
+                    } else {
+                        loadingMessage.textContent = '';
+                        safeShow(errorMessage);
+                    }
+                };
+
+                document.body.appendChild(script);
+            }
+
+            function checkCode() {
+                let currentCode = '';
+
+                inputs.forEach(input => {
+                    currentCode += input.value;
+                });
+
+                if (currentCode.length === SECRET_CODE.length && currentCode === SECRET_CODE) {
+                    unlock();
+                }
+            }
+
+            inputs.forEach((input, index) => {
+
+                input.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/[^0-9]/g, '');
+
+                    if (value.length > 1) {
+                        value = value.slice(-1);
+                    }
+
+                    input.value = value;
+
+                    if (value && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+
+                    checkCode();
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+
+                    const pastedData = (e.clipboardData || window.clipboardData)
+                        .getData('text')
+                        .replace(/\D/g, '')
+                        .slice(0, inputs.length);
+
+                    pastedData.split('').forEach((char, i) => {
+                        if (inputs[i]) {
+                            inputs[i].value = char;
+                        }
+                    });
+
+                    checkCode();
+                });
             });
-            input.addEventListener('keydown', (e) => {
-                if (e.key === "Backspace" && !input.value && index > 0) inputs[index - 1].focus();
+
+            function updateTimer() {
+                try {
+                    const now = new Date();
+
+                    const target = new Date(now);
+                    target.setDate(now.getDate() + ((6 - now.getDay() + 7) % 7 || 7));
+                    target.setHours(0, 0, 0, 0);
+
+                    const diff = target.getTime() - now.getTime();
+
+                    if (diff <= 0) {
+                        unlock();
+                        return;
+                    }
+
+                    const days = Math.floor(diff / 86400000);
+                    const hours = Math.floor((diff % 86400000) / 3600000);
+                    const minutes = Math.floor((diff % 3600000) / 60000);
+                    const seconds = Math.floor((diff % 60000) / 1000);
+
+                    document.getElementById('days').textContent = String(days).padStart(2, '0');
+                    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+                } catch (error) {
+                    console.error('Error en el timer:', error);
+                }
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer();
+
+            window.addEventListener('error', (event) => {
+                console.error('Error global:', event.error);
             });
-        });
 
-        // Timer
-        function updateTimer() {
-            const now = new Date();
-            const target = new Date();
-            target.setDate(now.getDate() + (6 - now.getDay())); 
-            target.setHours(0, 0, 0, 0);
-            const diff = target - now;
-            if (diff <= 0) { unlock(); return; }
+            window.addEventListener('unhandledrejection', (event) => {
+                console.error('Promise rechazada:', event.reason);
+            });
 
-            document.getElementById('days').textContent = Math.floor(diff / 86400000).toString().padStart(2, '0');
-            document.getElementById('hours').textContent = Math.floor((diff / 3600000) % 24).toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = Math.floor((diff / 60000) % 60).toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    updateTimer();
+                }
+            });
+
+        })();
     </script>
 </body>
 </html>
+
