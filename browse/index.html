@@ -288,17 +288,20 @@
 
 </footer>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <!-- Scripts base -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 
-    <script src="../nav.js"></script>
+<!-- Firebase FIRST (auth source of truth) -->
+<script type="module" src="../js/auth.js"></script>
 
-    <script type="module" src="../js/auth.js"></script>
-    <script type="module" src="../js/profileOverlay.js"></script>
-    <script type="module" src="../js/profile.js"></script>
-    <script src="../js/slide.js" defer></script>
-    <script type="module" src="../js/script.js"></script>
+<!-- UI scripts AFTER auth -->
+<script src="../nav.js"></script>
+
+<script type="module" src="../js/profileOverlay.js"></script>
+<script type="module" src="../js/profile.js"></script>
+<script src="../js/slide.js" defer></script>
+<script type="module" src="../js/script.js"></script>
 
     <!-- Cookies & Analytics -->
     <script>
