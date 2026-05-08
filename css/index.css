@@ -25,21 +25,24 @@ a {
 /* ============================================================
    2. SISTEMA DE PERFILES (Pantalla de Inicio)
    ============================================================ */
-.profileOverlay {
+/* OVERLAY DE PERFILES */
+#profileOverlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%; /* Mejor que 100vh para Safari móvil */
     background: #141414;
     color: white;
-    display: flex;
+    display: none; /* JS lo pone en flex */
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-
+    z-index: 99999; /* Por encima de todo */
+    padding: 20px;
+    text-align: center;
 }
+
 
 .profileOverlay img {
   width: 80px;        /* tamaño chico */
@@ -74,23 +77,24 @@ a {
   transform: scale(0.95);
 }
 
-.profiles {
+#profiles {
     display: flex;
-    flex-wrap: wrap; /* Esto permite que los perfiles bajen en el celular si no caben de forma horizontal */
-    gap: 30px;
-    margin: 60px 0 20px 0;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    max-width: 600px;
 }
 
 .profileWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
     cursor: pointer;
-    text-align: center;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s;
 }
+
+.profileWrapper:active { transform: scale(0.95); } /* Feedback en móviles */
 
 .profileWrapper:hover {
     transform: scale(1.05);
