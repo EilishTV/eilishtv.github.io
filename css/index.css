@@ -74,12 +74,11 @@ a {
   transform: scale(0.95);
 }
 
-
-
 .profiles {
     display: flex;
+    flex-wrap: wrap; /* Esto permite que los perfiles bajen en el celular si no caben de forma horizontal */
     gap: 30px;
-    margin: 60px 0 20px 0; /* margen superior ajustable */
+    margin: 60px 0 20px 0;
     justify-content: center;
 }
 
@@ -107,6 +106,11 @@ a {
     justify-content: center;
     font-size: 40px;
     color: white;
+
+    /* AGREGA ESTAS 3 LÍNEAS PARA QUITAR EL BUG */
+    background-size: cover;      /* Hace que la foto cubra todo el círculo */
+    background-position: center;  /* Centra la foto */
+    overflow: hidden;             /* CORTA lo que se sale del círculo (esto es lo más importante) */
 }
 
 .addAvatar {
