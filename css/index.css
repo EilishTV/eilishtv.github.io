@@ -74,11 +74,12 @@ a {
   transform: scale(0.95);
 }
 
+
+
 .profiles {
     display: flex;
-    flex-wrap: wrap; /* Esto permite que los perfiles bajen en el celular si no caben de forma horizontal */
     gap: 30px;
-    margin: 60px 0 20px 0;
+    margin: 60px 0 20px 0; /* margen superior ajustable */
     justify-content: center;
 }
 
