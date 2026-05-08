@@ -81,14 +81,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Definir la función global para que otros scripts (como el overlay o profile) puedan actualizar el Nav
-    window.updateNavAvatars = (avatar, name) => {
-        // Actualizar UI
-        if (navName) navName.textContent = name;
-        navAvatars.forEach(img => img.src = avatar);
-        if (userImg) userImg.src = avatar;
+    function waitForElements() {
+    return new Promise((resolve) => {
+        const check = () => {
+            const navAvatars = document.querySelectorAll(".navAvatar");
+            const userImg = document.querySelector(".userImg");
+            const navName = document.getElementById("navProfileName");
 
-   
-    };
+            if (navAvatars.length || userImg || navName) {
+                resolve({ navAvatars, userImg, navName });
+            } else {
+                requestAnimationFrame(check);
+            }
+        };
+
+        check();
+    });
+}
 });
 
 /* =========================
