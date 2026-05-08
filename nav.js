@@ -1,0 +1,103 @@
+/* =========================
+   NAV Y DROPDOWN USUARIO
+========================= */
+const userMenu = document.querySelector(".userMenu");
+const dropDown = document.querySelector(".dropDown");
+const profileArrow = document.getElementById("profileArrow");
+const openProfiles = document.getElementById("openProfiles");
+
+let closeTimer;
+
+// Dropdown hover
+if (userMenu && dropDown) {
+    userMenu.addEventListener("mouseenter", () => {
+        clearTimeout(closeTimer);
+        dropDown.style.display = "flex";
+        if (profileArrow) profileArrow.style.opacity = "1";
+    });
+
+    userMenu.addEventListener("mouseleave", () => {
+        closeTimer = setTimeout(() => {
+            dropDown.style.display = "none";
+            if (profileArrow) profileArrow.style.opacity = "0";
+        }, 150);
+    });
+}
+
+/* =========================
+   BUSCADOR
+========================= */
+const searchBtn = document.querySelector(".searchBtn");
+const searchInput = document.querySelector(".searchInput");
+
+if (searchBtn && searchInput) {
+    searchBtn.addEventListener("click", () => {
+        searchInput.classList.toggle("show");
+        if (searchInput.classList.contains("show")) searchInput.focus();
+    });
+}
+
+/* =========================
+   LOGOUT
+========================= */
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (window.logoutUser) {
+            window.logoutUser();
+        } else {
+            console.error("logoutUser no está disponible todavía");
+        }
+    });
+}
+
+/* =========================
+   PERFIL ACTIVO EN NAV (FIX F5)
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+    const navAvatars = document.querySelectorAll(".navAvatar");
+    const userImg = document.querySelector(".userImg");
+    const navName = document.getElementById("navProfileName");
+
+    // Intentar cargar desde localStorage apenas abre la web
+    const storedName = localStorage.getItem("navProfileName");
+    const storedAvatar = localStorage.getItem("navProfileAvatar");
+
+    if (storedName && navName) {
+        navName.textContent = storedName;
+    }
+
+    if (storedAvatar) {
+        navAvatars.forEach(img => img.src = storedAvatar);
+        if (userImg) userImg.src = storedAvatar;
+    }
+
+    // Definir la función global para que otros scripts (como el overlay o profile) puedan actualizar el Nav
+    window.updateNavAvatars = (avatar, name) => {
+        // Actualizar UI
+        if (navName) navName.textContent = name;
+        navAvatars.forEach(img => img.src = avatar);
+        if (userImg) userImg.src = avatar;
+
+        // Guardar para que no se borre al dar F5
+        localStorage.setItem("navProfileAvatar", avatar);
+        localStorage.setItem("navProfileName", name);
+    };
+});
+
+/* =========================
+   ABRIR OVERLAY DE PERFILES
+========================= */
+if (openProfiles) {
+    openProfiles.addEventListener("click", () => {
+        const overlay = document.getElementById("profileOverlay");
+        if (overlay) {
+            overlay.style.display = "flex";
+            // Quitamos el estado de 'perfil seleccionado' para que el script del overlay cargue los perfiles
+            sessionStorage.removeItem("profileSelected");
+        }
+        if (profileArrow) profileArrow.style.opacity = "0";
+    });
+}

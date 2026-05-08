@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta | EilishTV</title>
+    <link rel="stylesheet" href="../../css/identify.css">
+</head>
+
+<body class="registerPage">
+
+    <div class="registerBox">
+        <img src="../../images/extras/logo.png" class="logo" alt="EilishTV">
+
+        <h2>Create an account to continue</h2>
+
+        <p class="desc">
+            With an EilishTV account, you can access exclusive Billie Eilish
+            content and features across the platform.
+        </p>
+
+        <div class="emailInfo">
+            Create your account using <strong id="userEmail">
+                example@email.com
+            </strong>
+            <span class="edit">Edit</span>
+        </div>
+
+        <label>Nombre</label>
+        <input type="text" id="userName" placeholder="Tu nombre completo">
+
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Choose a password">
+
+        <p class="rules">
+            Use a minimum of 6 characters (case sensitive) with at least
+            one number or special character.
+        </p>
+
+        <label class="check">
+            <input type="checkbox">
+            Yes, I would like to receive updates and special information from EilishTV.
+        </label>
+
+        <p id="formError" class="formError"></p>
+
+        <button class="continueBtn">Agree & Continue</button>
+    </div>
+
+    <script src="../../js/identify.js"></script>
+    <script type="module" src="../../js/auth.js"></script>
+
+</body>
+</html>

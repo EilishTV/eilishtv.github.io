@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Watch History - EilishTV</title>
+    <!-- Subimos dos niveles para llegar a la raíz y entrar a browse/css -->
+    <link rel="stylesheet" href="../../browse/browse.css">
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body { 
+            background: #040714; 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            color: white; 
+        }
+
+        /* Ajuste para que el contenido no quede debajo del nav fijo */
+        .history-container { 
+            padding: 110px 20px 40px; 
+            min-height: 100vh;
+        }
+
+        .list-title { 
+            margin-left: 10px;
+            margin-bottom: 30px;
+            font-size: 1.8rem; 
+        }
+
+        .historyGrid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .videoItem {
+            position: relative;
+            aspect-ratio: 16 / 9; 
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid rgba(249, 249, 249, 0.1);
+            box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
+                        rgb(0 0 0 / 73%) 0px 16px 10px -10px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .videoItem img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .videoItem:hover {
+            transform: scale(1.05);
+            border-color: rgba(249, 249, 249, 0.8);
+            box-shadow: rgb(0 0 0 / 80%) 0px 40px 58px -16px;
+        }
+
+        .empty-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 100px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 1024px) { .historyGrid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { 
+            .historyGrid { grid-template-columns: repeat(2, 1fr); }
+            .list-title { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN MANUAL CORREGIDA -->
+    <nav>
+        <a class="navLogo" href="../../index.html">
+            <!-- Desde account/history/ subimos dos niveles para llegar a images -->
+            <img src="../../images/extras/logo.png" alt="EilishTV"/>
+        </a>
+
+        <div class="navMenu">
+            <a href="../../browse/">Inicio</a>
+            <a href="#">Peliculas</a>
+            <a href="#">Shows</a>
+            <a href="../../browse/my-list/">Mi Lista</a>
+        </div>
+
+        <form class="searchContainer" action="../../browse/search/" method="GET">
+            <input type="text" class="searchInput" name="q" placeholder="Search..."/>
+            <button type="submit" class="searchBtn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="userMenu">
+            <img class="userImg" src="../../images/avatars/avatar1.jpeg" alt="avatar" />
+            <div class="dropDown">
+                <div class="profileHeader" id="openProfiles">
+                    <img class="navAvatar" src="../../images/avatars/avatar1.jpeg" alt="avatar">
+                    <span id="navProfileName">User</span>
+                    <i class="fas fa-chevron-right" id="profileArrow"></i>
+                </div>
+                <a href="../../account/#profiles">Perfil</a>
+                <a href="../../account/">Cuenta</a>
+                <a href="../../account/history/">Historial</a>
+                <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="history-container">
+        <h2 class="list-title">Watch History</h2>
+        <div class="historyGrid" id="historyGrid">
+            <!-- Items de Firebase -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { auth } from "../../js/auth.js";
+
+        const db = getFirestore();
+        const grid = document.getElementById("historyGrid");
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const histRef = collection(db, "users", user.uid, "history");
+                    const q = query(histRef, orderBy("watchedAt", "desc"));
+                    const querySnapshot = await getDocs(q);
+
+                    grid.innerHTML = ""; 
+
+                    if (querySnapshot.empty) {
+                        grid.innerHTML = `<div class="empty-msg">No has visto nada aún.</div>`;
+                        return;
+                    }
+
+                    querySnapshot.forEach((docSnap) => {
+                        const data = docSnap.data();
+                        let finalImg = data.imagen;
+                        if (finalImg && !finalImg.startsWith("http")) {
+                            finalImg = "../../" + finalImg.replace(/^\//, "");
+                        }
+
+                        const div = document.createElement("div");
+                        div.className = "videoItem";
+                        div.innerHTML = `<img src="${finalImg}" alt="${data.titulo}">`;
+                        div.onclick = () => {
+                            window.location.href = `../../browse/watch/index.html?id=${data.id}`;
+                        };
+                        grid.appendChild(div);
+                    });
+                } catch (error) {
+                    console.error("Error loading history:", error);
+                }
+            } else {
+                // Si no hay usuario, redirigir al login
+                window.location.href = "../../login.html";
+            }
+        });
+    </script>
+
+    <!-- Eliminado nav-placeholder para evitar duplicados -->
+    <script src="../../nav.js"></script>
+</body>
+</html>

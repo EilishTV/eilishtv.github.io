@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargando...</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      background: #0c0c0f;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", Arial, sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .ui {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      z-index: 50; /* más alto que iframe */
+      opacity: 1;
+      transition: opacity .4s ease;
+      pointer-events: auto;
+    }
+
+    .ui.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .volver {
+      display: inline-block;
+      padding: 10px 15px;
+      color: rgb(0, 100, 131);
+      font-size: 15px;
+      transition: 0.2s;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .volver:hover {
+      color: rgb(0, 151, 197);
+    }
+
+    .titulo {
+      font-size: 25px;
+      font-weight: 700;
+      margin-left: 15px;
+      margin-top: -15px;
+    }
+
+    .video-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      overflow: hidden;
+      cursor: pointer;
+      z-index: 10; /* debajo del UI */
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .btn-fullsound {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      background: rgb(0, 100, 131);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 60; /* sobre todo */
+    }
+
+    .btn-fullsound:hover {
+      background: rgb(0, 151, 197);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ui" id="ui">
+    <a class="volver" href="/browse/">
+  <i class="fas fa-home"></i> Volver
+</a>
+    <div class="titulo" id="titulo">Cargando…</div>
+  </div>
+
+  <div class="video-container" id="videoContainer">Cargando…</div>
+
+  <button class="btn-fullsound" id="btnFullSound" style="display:none;">Activar sonido y pantalla completa</button>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = Number(params.get("id"));
+
+    const ui = document.getElementById("ui");
+    const tituloDOM = document.getElementById("titulo");
+    const videoContainer = document.getElementById("videoContainer");
+    const btnFullSound = document.getElementById("btnFullSound");
+
+    const url = "https://opensheet.elk.sh/1PjRQDpbZQ6nscdRzlEOtwNpeEiyeEOGjkic6mggNEBY/1";
+
+    let currentIframe;
+
+    /* ---------- EMBED ---------- */
+    function getDriveEmbed(link) {
+      const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (!match) return "";
+      return `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    }
+
+    function getVkEmbed(link) {
+      const match = link.match(/video([-0-9]+)_([0-9]+)/);
+      if (!match) return "";
+      return `<iframe src="https://vk.com/video_ext.php?oid=${match[1]}&id=${match[2]}&hd=1&autoplay=1&muted=1" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    }
+
+    function getYoutubeEmbed(link) {
+      let videoId = "";
+      const patterns = [
+        /youtube\.com\/watch\?v=([^&]+)/,
+        /youtu\.be\/([^?&]+)/,
+        /youtube\.com\/embed\/([^?&]+)/,
+        /youtube\.com\/shorts\/([^?&]+)/,
+      ];
+      for (const p of patterns) {
+        const match = link.match(p);
+        if (match) { videoId = match[1]; break; }
+      }
+      if (!videoId) return "";
+      return `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
+    }
+
+/* ---------- CARGAR DATOS ---------- */
+fetch(url)
+  .then(r => r.json())
+  .then(data => {
+    const idParam = params.get("id"); // string, ej "0001"
+    const item = data.find(v => v.id === idParam); // ✅ busca por id único
+    if (!item) {
+      videoContainer.innerHTML = "<h1>Error cargando video</h1>";
+      return;
+    }
+
+    tituloDOM.textContent = item.alt || "Sin título";
+    document.title = item.alt || "Sin título";
+
+    let embed = "";
+    if (item.link.includes("drive.google.com")) embed = getDriveEmbed(item.link);
+    else if (item.link.includes("vk.com")) embed = getVkEmbed(item.link);
+    else if (item.link.includes("youtube.com") || item.link.includes("youtu.be")) embed = getYoutubeEmbed(item.link);
+
+    videoContainer.innerHTML = embed || "<h1>No se pudo cargar el video</h1>";
+    currentIframe = videoContainer.querySelector("iframe");
+
+    if (item.link.includes("vk.com")) btnFullSound.style.display = "block";
+  })
+  .catch(() => { videoContainer.innerHTML = "<h1>Error de conexión</h1>"; });
+
+/* ---------- BOTÓN ACTIVAR SONIDO Y FULLSCREEN ---------- */
+    btnFullSound.addEventListener("click", () => {
+      if (!currentIframe) return;
+
+      // Fullscreen
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) elem.requestFullscreen().catch(()=>{});
+      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+
+      // VK: reload iframe con sonido
+      if (currentIframe.src.includes("vk.com")) {
+        currentIframe.src = currentIframe.src.replace("&muted=1","&muted=0");
+      }
+
+      btnFullSound.style.display = "none";    
+    });
+
+    /* ---------- AUTO-OCULTAR UI ---------- */
+    let hideTimeout;
+    function resetHideTimer() {
+      ui.classList.remove("hidden");
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(()=> ui.classList.add("hidden"),5000);
+    }
+    document.addEventListener("mousemove", resetHideTimer);
+    document.addEventListener("click", resetHideTimer);
+    document.addEventListener("keydown", resetHideTimer);
+    resetHideTimer();
+
+    /* ---------- CLICK VIDEO PARA FULLSCREEN ---------- */
+    videoContainer.addEventListener("click", () => {
+      if (!currentIframe) return;
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) elem.requestFullscreen().catch(()=>{});
+      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+    });
+  </script>
+
+</body>
+</html>

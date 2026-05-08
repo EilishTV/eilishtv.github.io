@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/../css/account.css">
+    <style>
+        /* Estilos específicos para que el arco de nivel se vea premium */
+        .level-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px !important;
+            text-align: center;
+        }
+        .gauge-container {
+            position: relative;
+            width: 200px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+        }
+        .gauge-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .gauge-bg {
+            fill: none;
+            stroke: #f0f0f0;
+            stroke-width: 10;
+            stroke-linecap: round;
+        }
+        .gauge-progress {
+            fill: none;
+            stroke: #2ecc71;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 220;
+            stroke-dashoffset: 220;
+            transition: stroke-dashoffset 1.2s ease-in-out;
+        }
+        .gauge-content {
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+        }
+        .gauge-content i {
+            font-size: 32px;
+            color: #2ecc71;
+            margin-bottom: 5px;
+        }
+        .rank-name {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-transform: uppercase;
+        }
+        .hours-badge {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #888;
+            background: #f8f9fa;
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <img src="https://imglink.cc/cdn/F4fUMlRdWh.png" class="logo">
+    <div class="user"><i class="fas fa-user"></i></div>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="back" onclick="goBack()">← Volver a EilishTV!</div>
+        <div class="menu-item" onclick="navigate('overview')"><i class="fas fa-home"></i> Overview</div>
+        <div class="menu-item" onclick="navigate('levels')"><i class="fas fa-star"></i> Niveles</div>
+        <div class="menu-item" onclick="navigate('membership')"><i class="fas fa-credit-card"></i> Membership</div>
+        <div class="menu-item" onclick="navigate('security')"><i class="fas fa-shield-alt"></i> Security</div>
+        <div class="menu-item" onclick="navigate('devices')"><i class="fas fa-tv"></i> Devices</div>
+        <div class="menu-item" onclick="navigate('profiles')"><i class="fas fa-user"></i> Profiles</div>
+    </div>
+    <div class="content" id="content"></div>
+</div>
+
+<script src="/js/levels.js"></script>
+
+<script>
+    function goBack(){ window.location.href = "/browse/"; }
+
+    function navigate(section){
+        window.location.hash = section; 
+        router();
+    }
+
+    window.addEventListener("popstate", router);
+    window.addEventListener("load", router);
+
+    function router() {
+        let section = window.location.hash.replace('#', '') || 'overview';
+        const validSections = ["overview", "levels", "membership", "security", "devices", "profiles"];
+        if (!validSections.includes(section)) section = "overview";
+        renderSection(section);
+    }
+
+    function renderSection(section){
+        document.querySelectorAll(".menu-item").forEach(i => i.classList.remove("active"));
+        const active = document.querySelector(`[onclick*="'${section}'"]`);
+        if (active) active.classList.add("active");
+
+        const content = document.getElementById("content");
+
+        const views = {
+            overview: `
+                <div class="fade">
+                    <h1>Account</h1>
+                    <div class="subtitle">Membership Details</div>
+                    <div class="card">
+                        <div class="badge">Miembro desde <span id="memberSince">--</span></div>
+                        <div class="plan">Account</div>
+                        <div style="color:#666;margin-bottom:15px;">
+                            Last access: <span id="lastAccess">--</span><br>
+                            Device: <span id="device">--</span>
+                        </div>
+                    </div>
+                    <div class="subtitle">Quick Links</div> 
+                    <div class="card"> 
+                        <div class="row">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span>Cambiar idioma</span>
+                                <div class="badge" style="margin-bottom:0; font-size:10px; background: #444;">Proximamente</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="row" onclick="navigate('levels')"><span>Ver mi nivel</span><span class="arrow">›</span></div>
+                        <div class="row" onclick="navigate('security')"><span>Cambiar contraseña</span><span class="arrow">›</span></div>
+                    </div>
+                    <div>
+                        <button id="deleteAccountBtn" style="margin-top: 15px; background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;">
+                            Eliminar cuenta
+                        </button>
+                    </div>
+                </div>`,
+            levels: `
+    <div class="fade">
+        <h1>Niveles</h1>
+        <div class="subtitle">Tu rango basado en la actividad</div>
+        <div class="card level-card">
+            <div class="gauge-container">
+                <svg class="gauge-svg" viewBox="0 0 200 120">
+                    <path class="gauge-bg" d="M 30 100 A 70 70 0 0 1 170 100" />
+                    <path id="gaugeProgress" class="gauge-progress" d="M 30 100 A 70 70 0 0 1 170 100" />
+                </svg>
+                <div class="gauge-content">
+                    <i class="fas fa-star" id="starIcon"></i>
+                    <span id="rankTitle" class="rank-name">---</span>
+                </div>
+            </div>
+            <div class="hours-badge"><span id="hoursVal">0</span> horas reproducidas</div>
+            <p id="nextRankMsg" style="font-size:12px; color:#999; margin-top:10px;"></p>
+        </div>
+
+        <div class="subtitle">Tus Beneficios</div>
+        <div id="rewardsContainer">
+            </div>
+    </div>
+                    <div class="subtitle">Preguntas frecuentes</div> 
+                    <div class="card"> 
+                        <div class="row" <span>¿Que son los niveles?</span><span class="arrow">›</span></div>
+                        <div class="row">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span>Cambiar idioma</span>
+                                <div class="badge" style="margin-bottom:0; font-size:10px; background: #444;">Proximamente</div>
+                            </div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>`,
+            security: `
+    <div class="fade">
+        <h1>Security</h1>
+        <div class="subtitle">Configuración de acceso</div>
+        <div class="card">
+            <!-- ID CRÍTICO: userEmail. No cambiar para que updateUIWithUser funcione -->
+            <div id="userEmail" style="font-size:18px; font-weight:600; padding:15px 0 5px 0; color:#1a1a1a;">--</div>
+            <div style="color:#666; font-size:13px; padding-bottom:15px">Este email se usa para iniciar sesión en tu cuenta.</div>
+            
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+            
+            <div id="passwordSection">
+                <div class="row" onclick="window.showPasswordForm()" style="cursor:pointer">
+                    <div class="left"><i class="fas fa-lock"></i> <span>Cambiar contraseña</span></div>
+                    <span class="arrow">›</span>
+                </div>
+            </div>
+
+            <!-- Formulario oculto por defecto -->
+            <div id="passwordFormContainer" style="display:none; padding-top:10px;" class="fade">
+                <h3 style="font-size:14px; margin-bottom:15px; color:#333; text-transform: uppercase; letter-spacing: 1px;">Nueva Contraseña</h3>
+                
+                <input type="password" id="currentPassword" placeholder="Contraseña actual" 
+                    style="width: 100%; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; margin-bottom: 10px; outline: none; box-sizing: border-box;">
+                
+                <input type="password" id="newPassword" placeholder="Nueva contraseña" 
+                    style="width: 100%; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; margin-bottom: 10px; outline: none; box-sizing: border-box;">
+                
+                <input type="password" id="confirmPassword" placeholder="Confirmar nueva contraseña" 
+                    style="width: 100%; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; margin-bottom: 15px; outline: none; box-sizing: border-box;">
+                
+                <div style="display: flex; gap: 10px;">
+                    <button id="updatePassBtn" style="background: #000; color: #fff; border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; flex: 1; font-size: 12px; transition: 0.3s;">
+                        ACTUALIZAR
+                    </button>
+                    <button onclick="window.hidePasswordForm()" style="background: none; border: 1px solid #ccc; color: #666; padding: 12px 20px; cursor: pointer; border-radius: 4px; font-size: 12px;">
+                        CANCELAR
+                    </button>
+                </div>
+                <p id="passMessage" style="font-size: 12px; margin-top: 15px; text-align: center; min-height: 15px;"></p>
+            </div>
+        </div>
+    </div>`,
+            profiles: `
+                <div id="profiles" class="fade">
+                    <h1>Profiles</h1>
+                    <div id="profileSubtitle" class="subtitle">Profile Settings</div>
+                    <div class="card" id="profilesContainer">
+                        <div style="padding:20px;text-align:center;color:#888;">Cargando perfiles...</div>
+                    </div>
+                </div>`,
+            membership: `
+                <div class="fade"><h1>Membership</h1><div class="card">Actualmente, EilishTV! no dispone de una suscripción premium.
+</div></div>`,
+            devices: `
+                <div class="fade"><h1>Devices</h1><div class="card">Gestiona tus dispositivos conectados.</div></div>`
+        };
+
+        content.innerHTML = views[section] || views.overview;
+
+        // Cargar datos de usuario tras renderizar
+        if (window.currentUser) {
+            window.updateUIWithUser(window.currentUser);
+            if (section === 'levels' && window.initLevelsUI) {
+                window.initLevelsUI();
+            }
+            if (section === 'profiles' && typeof window.initProfilesUI === 'function') {
+                window.initProfilesUI(window.currentUser);
+            }
+        }
+    }
+</script>
+
+<script type="module">
+    import { auth } from "/js/auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import "/js/profile.js"; 
+
+    window.currentUser = null;
+
+    window.updateUIWithUser = function(user) {
+        const emailEl = document.getElementById("userEmail");
+        const sinceEl = document.getElementById("memberSince");
+        const accessEl = document.getElementById("lastAccess");
+        const deviceEl = document.getElementById("device");
+
+        if(emailEl) emailEl.textContent = user.email;
+        if(sinceEl) {
+            const date = new Date(user.metadata.creationTime);
+            sinceEl.textContent = date.toLocaleDateString("es-ES", {year:"numeric", month:"long"});
+        }
+        if(accessEl) {
+            const lastLogin = new Date(user.metadata.lastSignInTime);
+            accessEl.textContent = lastLogin.toLocaleString();
+        }
+        if(deviceEl) {
+            const ua = navigator.userAgent;
+            deviceEl.textContent = ua.includes("Chrome") ? "Chrome on Windows" : "Navegador Web";
+        }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        window.currentUser = user || null;
+        if(user) {
+            router(); // Ejecutar router para renderizar sección actual con datos
+        } else {
+            window.location.href = "/identify/";
+        }
+    });
+</script>
+
+<script src="/nav.js"></script>
+
+</body>
+</html>

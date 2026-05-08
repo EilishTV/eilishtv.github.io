@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrar Perfiles | EilishTV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+
+<div class="profilePage">
+  <button class="backBtn" onclick="window.location.href='/browse/'"><i class="fas fa-home"></i> Volver a EilishTV</button>
+  <h1>Perfiles</h1>
+
+  <div class="profilesContainer" id="profilesContainer">
+    <!-- Perfiles renderizados por JS -->
+  </div>
+
+  <button id="addProfile" class="addProfileBtn">Agregar perfil</button>
+  <p class="note">Agrega hasta 5 perfiles por cuenta.</p>
+</div>
+
+<!-- Modal para agregar/editar perfil -->
+<div class="modal" id="profileModal">
+  <div class="modalContent">
+    <span class="closeModal">&times;</span>
+    <h2 id="modalTitle">Agregar perfil</h2>
+    <p>Selecciona un avatar y agrega un nombre</p>
+    <div class="avatarSelection" id="avatarSelection">
+      <img src="../images/avatars/avatar1.jpeg" class="avatarOption selected">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7NLjXUb4pFuSxNLbZrG20vrg6aB_PDPl6Zg&s" class="avatarOption">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCz_EWN2FuF9ga_iWXBRk_9QaMRWIrJBOkgg&s" class="avatarOption">
+      <img src="../images/avatars/avatar4.jpeg" class="avatarOption">
+      <img src="../images/avatars/avatar5.jpeg" class="avatarOption">
+    </div>
+    <input type="text" id="profileNameInput" placeholder="Nombre">
+    <button id="saveProfileBtn">Guardar</button>
+  </div>
+</div>
+
+<script type="module" src="../js/profile.js"></script>
+<script type="module" src="../js/script.js"></script>
+</body>
+</html>

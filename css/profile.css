@@ -1,0 +1,230 @@
+/* ===== Body ===== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  color: #111;
+}
+
+/* ===== Página ===== */
+.profilePage {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+h1 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+/* ===== Contenedor ===== */
+.profilesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+/* ===== Card ===== */
+.profileCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  border-radius: 12px;
+  background-color: #f5f5f5;
+}
+
+.profileCard:hover {
+  background-color: #eaeaea;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profileInfo img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profileInfo span {
+  font-weight: bold;
+}
+
+/* ===== Botones ===== */
+.profileActions {
+  display: flex;
+  gap: 10px;
+}
+
+.editBtn {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.editBtn:hover {
+  background: #000;
+}
+
+.deleteBtn {
+  background: transparent;
+  border: 1px solid #ccc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  border-color: #111;
+}
+
+.mainProfileBtn {
+  background: #e5e5e5;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ===== Botón agregar ===== */
+.addProfileBtn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.addProfileBtn:hover {
+  background-color: #444;
+}
+
+/* ===== Nota ===== */
+.note {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* ===== Modal ===== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🔥 FIX REAL */
+.modalContent {
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  max-width: 380px;
+  width: 90%;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra todo */
+  text-align: center;
+}
+
+.closeModal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* 🔥 INPUT ARREGLADO */
+.modalContent input {
+  width: 100%;
+  max-width: 280px;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+/* 🔥 BOTÓN ALINEADO */
+.modalContent button {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+.modalContent button:hover {
+  background-color: #444;
+}
+
+/* ===== Avatares ===== */
+.avatarSelection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.avatarSelection img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.avatarSelection img.selected,
+.avatarSelection img:hover {
+  border-color: #111;
+  transform: scale(1.05);
+}
+
+/* ===== Toast ===== */
+.toastMessage {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+}

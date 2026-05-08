@@ -1,0 +1,899 @@
+/* ============================================================
+   1. CONFIGURACIÓN BASE Y RESET
+   ============================================================ */
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #040714;
+    color: #f9f9f9;
+    font-family: Avenir-Roman, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #f9f9f9;
+    text-decoration: none;
+}
+
+/* ============================================================
+   2. SISTEMA DE PERFILES (Pantalla de Inicio)
+   ============================================================ */
+.profileOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #141414;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+}
+
+.profileOverlay img {
+  width: 80px;        /* tamaño chico */
+  height: auto;
+  display: block;
+  margin: 0 auto 10px; /* centrado + espacio abajo */
+  
+}
+
+.editProfileBtn {
+  margin-top: 20px;
+  padding: 10px 18px;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.editProfileBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+  color: #fff;
+}
+
+/* Click */
+.editProfileBtn:active {
+  transform: scale(0.95);
+}
+
+
+
+.profiles {
+    display: flex;
+    gap: 30px;
+    margin: 60px 0 20px 0; /* margen superior ajustable */
+    justify-content: center;
+}
+
+.profileWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.profileWrapper:hover {
+    transform: scale(1.05);
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    background: gray;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
+}
+
+.addAvatar {
+    background: #555;
+    font-size: 40px;
+}
+
+.profileName {
+    font-size: 14px;
+    text-align: center;
+}
+
+.editProfileBtn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* ============================================================
+   3. NAVEGACIÓN (NAV COMPLETO)
+   ============================================================ */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background-color: #090b13;
+    display: flex;
+    align-items: center;
+    padding: 0 36px;
+    z-index: 10;
+}
+
+.navLogo {
+    width: 100px;
+    margin-top: 0px;
+    font-size: 0;
+    display: inline-block;
+}
+
+.navLogo img {
+    display: block;
+    width: 70%;
+}
+
+.navMenu {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: auto;
+    font-size: 14px;
+}
+
+.navMenu a {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.navMenu a span {
+    font-size: 13px;
+    letter-spacing: 1.42px;
+    padding: 2px 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+/* Línea animada debajo de los links del menú */
+.navMenu a span::before {
+    background-color: rgb(249, 249, 249);
+    border-radius: 0 0 4px 4px;
+    bottom: -6px;
+    content: "";
+    height: 2px;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: all 250ms ease;
+    visibility: hidden;
+}
+
+.navMenu a:hover span::before {
+    transform: scaleX(1);
+    visibility: visible;
+    opacity: 1;
+}
+
+/* --- SECCIÓN BUSCADOR --- */
+.searchContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.searchBtn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    z-index: 10;
+}
+
+.searchInput {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    padding: 5px 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1a1e2a;
+    color: white;
+    font-size: 13px;
+    outline: none;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    z-index: 5;
+}
+
+.searchInput::placeholder {
+    color: #ccc;
+}
+
+.searchContainer:hover .searchInput,
+.searchInput:focus {
+    width: 180px;
+    opacity: 1;
+}
+
+/* --- MENÚ DE USUARIO (Dropdown) --- */
+.userMenu {
+    position: relative;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}
+
+.userImg {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+#profileArrow {
+    margin-left: 68px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+
+.dropDown {
+    position: absolute;
+    right: 0;
+    top: 55px;
+    background: rgba(19, 19, 19, 0.98);
+    border: 1px solid rgba(151, 151, 151, 0.25);
+    border-radius: 6px;
+    box-shadow: rgb(0 0 0 / 50%) 0px 0px 18px 0px;
+    padding: 12px;
+    width: 220px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.userMenu:hover .dropDown {
+    display: flex;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.profileHeader img {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+
+.profileHeader span {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.dropDown a {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+.dropDown a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================================
+   NAVEGACIÓN MÓVIL: AJUSTE DE ESPACIADO Y BLOQUE SÓLIDO
+   ============================================================ */
+@media (max-width: 768px) {
+    nav {
+        height: 80px; 
+        padding: 0 20px; /* Un poco más de aire a los lados del nav */
+        display: flex;
+        align-items: center;
+        background-color: #090b13;
+    }
+
+    /* Logo: Mantiene su forma sin estirarse */
+    .navLogo {
+        width: 70px;
+        flex-shrink: 0;
+    }
+
+    .navLogo img {
+        width: 100%;
+        object-fit: contain;
+    }
+
+    /* CONTENEDOR DEL MENÚ - SEPARADO DEL LOGO */
+    .navMenu {
+        position: relative;
+        display: flex;
+        align-items: center;
+        /* Aumentamos el margen para que no toque el logo */
+        margin-left: 25px; 
+        margin-right: auto;
+        height: 80px;
+    }
+
+    /* Link de "Inicio" - Clickable e independiente */
+    .navMenu a:first-child {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #f9f9f9;
+        text-transform: none;
+        padding: 0;
+        z-index: 10;
+        white-space: nowrap;
+    }
+
+    /* LA FLECHA - Separada para disparar el menú sin navegar */
+    .navMenu::after {
+        content: "";
+        width: 0; height: 0;
+        margin-left: 10px; /* Espacio entre el texto y la flecha */
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #f9f9f9;
+        display: inline-block;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Rotación de flecha al abrir */
+    .navMenu:hover::after {
+        transform: rotate(180deg);
+    }
+
+    /* EL BLOQUE DESPLEGABLE - UNIFICADO (Sin huecos) */
+    .navMenu a:not(:first-child) {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        left: 0;
+        width: 170px;
+        background-color: #13151d;
+        color: #f9f9f9;
+        padding: 14px 18px;
+        text-decoration: none;
+        border-left: 1px solid #333;
+        border-right: 1px solid #333;
+        z-index: 100;
+        /* Transición suave hacia abajo */
+        transform: translateY(-5px);
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    }
+
+    /* Mostrar bloque completo al hacer hover */
+    .navMenu:hover a:not(:first-child) {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        display: block;
+    }
+
+    /* POSICIONAMIENTO PEGADO (Calculado para bloque único) */
+    .navMenu a:nth-child(2) { 
+        top: 62px; /* Pegado justo al límite del nav */
+        border-top: 1px solid #444;
+        border-radius: 4px 4px 0 0;
+    }
+    .navMenu a:nth-child(3) { top: 108px; }
+    .navMenu a:nth-child(4) { top: 154px; }
+    .navMenu a:nth-child(5) { 
+        top: 200px; 
+        border-bottom: 1px solid #444;
+        border-radius: 0 0 4px 4px;
+    }
+
+    .navMenu a:hover {
+        background-color: #1f232e;
+    }
+
+    /* --- BUSCADOR --- */
+    .searchContainer:hover .searchInput {
+        width: 85px;
+    }
+
+    /* --- AVATAR (Cuadrado Original) --- */
+    .userMenu {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+    }
+
+    .userImg {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px; 
+        object-fit: cover; /* No deforma la imagen */
+    }
+}
+
+/* ============================================================
+   4. ESTRUCTURA PRINCIPAL (MAIN Y SLIDER)
+   ============================================================ */
+main {
+    position: relative;
+    min-height: calc(100vh - 250px);
+    overflow-x: hidden;
+    display: block;
+    top: 72px;
+    padding: 0;
+}
+
+main::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+#netflix-slider {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    display: grid;
+    place-items: center;
+    background: #070707;
+    overflow: hidden;
+}
+
+#netflix-slider::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, #111 0%, #000 70%);
+}
+
+.slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(.92);
+    width: 75%;
+    height: 80%;
+    opacity: 0;
+    transition: all .8s ease;
+}
+
+.slide.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    z-index: 2;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    box-shadow: 0 40px 120px rgba(0,0,0,.8), 0 10px 40px rgba(0,0,0,.6);
+}
+
+.slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    background: linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,.2), transparent);
+}
+
+/* ============================================================
+   5. SECCIONES DE CONTENIDO (VIEWERS Y CARDS)
+   ============================================================ */
+
+/* --- CANALES (VIEWERS) --- */
+.viewers {
+    margin-top: 30px;
+    padding: 30px 20px 26px;
+    display: grid;
+    grid-gap: 25px;
+    gap: 25px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.viewerWrap {
+    padding-top: 56.25%;
+    border-radius: 10px;
+    box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px, rgb(0 0 0 / 73%) 0px 16px 10px -10px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 3px solid rgba(249, 249, 249, 0.1);
+}
+
+.viewerWrap img {
+    inset: 0;
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    position: absolute;
+    transition: opacity 500ms ease-in-out;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+}
+
+.viewerWrap video {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    z-index: 0;
+}
+
+.viewerWrap:hover {
+    transform: scale(1.05);
+    border-color: rgba(249, 249, 249, 0.8);
+}
+
+.viewerWrap:hover video {
+    opacity: 1;
+}
+
+/* --- CARRUSELES (RECOMMENDS) --- */
+.recommends {
+    padding: 0 0 26px;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sectionHeader h4 {
+    margin: 0;
+    margin-left: 20px;
+}
+
+.verMas {
+    text-decoration: none;
+    font-size: 14px;
+    color: #00A8E1;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.verMas i {
+    font-weight: 900;
+    filter: drop-shadow(0 0 4px rgba(0,168,225,0.6));
+}
+
+.verMas:hover {
+    transform: translateX(4px);
+    opacity: 0.8;
+}
+
+.recommendedContent {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 20px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+.recommendedContent::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- CARDS INDIVIDUALES --- */
+.recWrap {
+    width: 21%;
+    aspect-ratio: 16/9;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    border: 3px solid rgba(249,249,249,0.1);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform .3s ease, border-color .3s ease;
+}
+
+.recWrap:hover {
+    transform: scale(1.05);
+    border-color: rgba(249,249,249,0.8);
+}
+
+.cardImage, .cardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cardInfo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,.5), transparent);
+    padding: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .25s ease, transform .25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.recWrap:hover .cardInfo {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cardButtons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.playBtn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: white; color: black;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.listBtn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.cardDuration {
+    font-size: 12px;
+    color: #ccc;
+}
+
+/* Botones circulares */
+.playBtn, .listBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    font-size: 12px;
+}
+
+.playBtn { background: white; color: black; }
+.listBtn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; }
+
+.playBtn:hover, .listBtn:hover { transform: scale(1.1); }  
+
+/* ============================================================
+   6. POPUPS Y VIDEOS
+   ============================================================ */
+.custom-video-container {
+    width: 90%;
+    margin: 5% auto;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.custom-video-container video {
+    width: 100%;
+    display: block;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+    color: black;
+}
+
+.popup .popup-button {
+    display: inline-block;
+    padding: 15px 30px;
+    margin-top: 10px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.close {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* ============================================================
+   7. LOADER GLOBAL
+   ============================================================ */
+.loaderOverlay {
+    position: fixed;
+    inset: 0;
+    background: #090b13;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+}
+
+.loaderOverlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.loaderSpinner {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 140, 255, 0.15);
+    border-top: 4px solid #0090ff;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   8. RESPONSIVE (MEDIA QUERIES)
+   ============================================================ */
+
+/* Escritorio: Estilo Minimalista y Elegante */
+@media (min-width: 769px) {
+
+    .recommends {
+        position: relative;
+    }
+
+    .recommends .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+
+        width: 55px;
+        height: 90px; /* Un poco más estilizada */
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* Blanco con un toque de transparencia para que no "grite" */
+        color: rgba(255, 255, 255, 0.7); 
+        font-size: 30px;
+        
+        cursor: pointer;
+        z-index: 10;
+        opacity: 0;
+        
+        /* Transición de seda */
+        transition: all 0.4s ease-in-out;
+    }
+
+    /* 🔥 IZQUIERDA: Desvanecimiento suave */
+    .recommends .arrow.left {
+        left: 0;
+        border-radius: 0 40px 40px 0;
+        background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.45) 0%,   /* Menos oscuro que antes */
+            rgba(0, 0, 0, 0.2) 50%,
+            rgba(0, 0, 0, 0) 100%
+        );
+    }
+
+    /* 🔥 DERECHA: Desvanecimiento suave */
+    .recommends .arrow.right {
+        right: 0;
+        border-radius: 40px 0 0 40px;
+        background: linear-gradient(
+            to left,
+            rgba(0, 0, 0, 0.45) 0%,
+            rgba(0, 0, 0, 0.2) 50%,
+            rgba(0, 0, 0, 0) 100%
+        );
+    }
+
+    /* Revelado al entrar al slider */
+    .recommends:hover .arrow {
+        opacity: 1;
+    }
+
+    /* Hover directo sobre la flecha */
+    .recommends .arrow:hover {
+        color: #ffffff;
+        /* Al pasar el mouse, el fondo se oscurece solo un poco más para dar contraste */
+        background: linear-gradient(
+            to left, 
+            rgba(0, 0, 0, 0.6) 0%, 
+            rgba(0, 0, 0, 0) 100%
+        );
+        transform: translateY(-50%) scale(1.1); /* Crece suavemente */
+    }
+
+    .recommends .arrow.left:hover {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    /* Feedback de presión */
+    .recommends .arrow:active {
+        transform: translateY(-50%) scale(0.95);
+        opacity: 0.8;
+    }
+}
+
+/* Tablets */
+@media only screen and (min-width: 480px) and (max-width: 768px) {
+    .viewers { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .recWrap { width: 48%; }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+    .recommends .arrow { display: none !important; }
+}
+
+@media only screen and (max-width: 479px) {
+    .viewers { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .recWrap { width: 48%; }
+}

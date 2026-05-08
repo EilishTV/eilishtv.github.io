@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../../css/index.css">
+<title>Search • EilishTV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- NAV -->
+    <nav>
+        <a class="navLogo" href="/index.html">
+            <img src="../../images/extras/logo.png" alt="EilishTV"/>
+        </a>
+
+        <!-- Menú principal -->
+        <div class="navMenu">
+            <a href="/browse/">Home</a>
+            <a href="#">Movies</a>
+            <a href="#">Shows</a>
+            <a href="/browse/my-list/">My list</a>
+        </div>
+
+<!-- Buscador -->
+<form class="searchContainer" action="/browse/search/" method="GET">
+    <input 
+        type="text" 
+        class="searchInput" 
+        name="q"
+        placeholder="Buscar..."
+    />
+    <button type="submit" class="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+</form>
+
+        <!-- Menú de usuario -->
+        <div class="userMenu">
+            <img class="userImg" src="../../images/avatars/avatar1.jpeg" alt="avatar" />
+            <div class="dropDown">
+                <div class="profileHeader" id="openProfiles">
+                    <img src="../../images/avatars/avatar1.jpeg" alt="avatar">
+                    <span id="navProfileName">User</span>
+                    <i class="fas fa-chevron-right" id="profileArrow"></i>
+                </div>
+
+                <a href="../../profile/">Administrar perfil</a>
+                <a href="#">Cuenta</a>
+                <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
+                <a href="https://instagram.com/santbeq">Personal instagram</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
+
+<style>
+
+/* fondo */
+
+/* contenedor principal */
+.searchPage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:120px;
+    padding-left:20px;
+    padding-right:20px;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* buscador grande */
+
+.bigSearch{
+    width:100%;
+    height:70px;
+    background:#1a1e2a;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+    gap:15px;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.bigSearch i{
+    font-size:20px;
+    color:#aaa;
+}
+
+.bigSearch input{
+    flex:1;
+    height:100%;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:white;
+    font-size:20px;
+}
+
+.bigSearch input::placeholder{
+    color:#777;
+}
+
+/* resultados */
+
+.searchResults{
+    width:100%;
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+/* cards */
+
+.videoCard{
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    border:3px solid rgba(249,249,249,0.1);
+    transition:transform .3s, border-color .3s;
+}
+
+.videoCard img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.videoCard:hover{
+    transform:scale(1.05);
+    border-color:rgba(249,249,249,0.8);
+}
+
+/* TABLET */
+
+@media (max-width:1000px){
+
+.searchResults{
+grid-template-columns:repeat(3,1fr);
+}
+
+.bigSearch{
+height:65px;
+}
+
+}
+
+/* CELULAR */
+
+@media (max-width:700px){
+
+.searchPage{
+padding-top:80px;
+}
+
+.searchResults{
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.bigSearch{
+height:60px;
+}
+
+.bigSearch input{
+font-size:18px;
+}
+
+}
+
+/* CELULAR CHICO */
+
+@media (max-width:420px){
+
+.searchResults{
+grid-template-columns:1fr;
+}
+
+.bigSearch{
+height:55px;
+}
+
+.bigSearch input{
+font-size:16px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="searchPage">
+
+<div class="bigSearch">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input 
+type="text"
+id="searchInput"
+placeholder="Search videos..."
+>
+</div>
+
+<div class="searchResults" id="searchResults"></div>
+
+</div>
+
+<script>
+
+// URL de tu hoja
+const urlHoja1 = "https://opensheet.elk.sh/1PjRQDpbZQ6nscdRzlEOtwNpeEiyeEOGjkic6mggNEBY/1";
+
+let catalogo = [];
+
+const input = document.getElementById("searchInput");
+const results = document.getElementById("searchResults");
+
+// arreglar path de imagen
+function fixImagePath(path){
+if(!path) return "";
+if(path.startsWith("http")) return path;
+return "../../" + path.replace(/^\.{0,2}\//,"");
+}
+
+// fuzzy search
+function fuzzyMatch(str, query){
+
+str = (str || "").toLowerCase();
+query = (query || "").toLowerCase();
+
+let qIndex = 0;
+
+for(let c of str){
+if(c === query[qIndex]) qIndex++;
+if(qIndex === query.length) break;
+}
+
+return qIndex === query.length || str.includes(query);
+}
+
+// buscar
+function buscar(query){
+
+results.innerHTML = "";
+
+if(!query){
+results.innerHTML = "";
+return;
+}
+
+const encontrados = catalogo.filter(item =>
+fuzzyMatch(item.alt, query) || fuzzyMatch(item.tituloSeccion, query)
+);
+
+if(encontrados.length === 0){
+
+results.innerHTML = `
+<p style="opacity:.7">
+No results for <strong>${query}</strong>
+</p>
+`;
+
+return;
+}
+
+encontrados.forEach(item=>{
+
+const card = document.createElement("div");
+card.className = "videoCard";
+
+card.innerHTML = `
+<a href="../video.html?id=${item.id}">
+<img src="${fixImagePath(item.imagen)}">
+</a>
+`;
+
+results.appendChild(card);
+
+});
+
+}
+
+// cargar catálogo
+fetch(urlHoja1)
+.then(r=>r.json())
+.then(data=>{
+
+catalogo = data;
+
+// leer query de URL
+const params = new URLSearchParams(window.location.search);
+const query = params.get("q");
+
+if(query){
+input.value = decodeURIComponent(query);
+buscar(query);
+}
+
+});
+
+// 🔎 BUSCAR MIENTRAS ESCRIBÍS
+input.addEventListener("input", () => {
+
+const query = input.value.trim();
+buscar(query);
+
+});
+
+// ENTER redirige
+input.addEventListener("keydown", e=>{
+
+if(e.key === "Enter"){
+
+const query = input.value.trim();
+if(!query) return;
+
+window.location.href = `/browse/search?q=${encodeURIComponent(query)}`;
+
+}
+
+});
+
+</script>
+
+
+
+<script src="../../js/script.js"></script>
+<script src="../../nav.js"></script>
+
+
+
+</body>
+</html>

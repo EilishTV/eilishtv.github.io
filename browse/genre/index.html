@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sección - EilishTV</title>
+    <!-- Ajuste de rutas: subimos dos niveles -->
+    <link rel="stylesheet" href="../../browse/browse.css">
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        body {
+            background: #040714;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            color: white;
+        }
+
+        .genreGrid {
+            margin-top: 30px;
+            padding: 0 20px 40px;
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .genreItem {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid rgba(249, 249, 249, 0.1);
+            box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
+                        rgb(0 0 0 / 73%) 0px 16px 10px -10px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .genreItem img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .genreItem:hover {
+            transform: scale(1.05);
+            border-color: rgba(249, 249, 249, 0.8);
+        }
+
+        @media (max-width: 1024px) {
+            .genreGrid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .genreGrid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVEGACIÓN CORREGIDA -->
+    <nav>
+        <a class="navLogo" href="../../index.html">
+            <img src="../../images/extras/logo.png" alt="EilishTV"/>
+        </a>
+
+        <div class="navMenu">
+            <a href="../../browse/">Inicio</a>
+            <a href="#">Películas</a>
+            <a href="#">Shows</a>
+            <a href="../../browse/my-list/">Mi Lista</a>
+        </div>
+
+        <form class="searchContainer" action="../../browse/search/" method="GET">
+            <input type="text" class="searchInput" name="q" placeholder="Buscar..." />
+            <button type="submit" class="searchBtn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="userMenu">
+            <img class="userImg" src="../../images/avatars/avatar1.jpeg" alt="avatar" />
+            <div class="dropDown">
+                <div class="profileHeader" id="openProfiles">
+                    <img class="navAvatar" src="../../images/avatars/avatar1.jpeg" alt="avatar">
+                    <span id="navProfileName">User</span>
+                    <i class="fas fa-chevron-right" id="profileArrow"></i>
+                </div>
+                <a href="../../account/#profiles">Perfil</a>
+                <a href="../../account/">Cuenta</a>
+                <a href="../../account/history/">Historial</a>
+                <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
+                <a href="https://instagram.com/santbeq">Personal Instagram</a>
+                <a href="mailto:eilishtvmanagement@gmail.com">Help</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <h2 id="tituloGenero" style="margin-left:20px; margin-top: 120px; color:white;">Cargando...</h2>
+
+    <div class="genreGrid" id="genreGrid"></div>
+
+    <script type="module">
+        // Importamos auth para el funcionamiento del logout si lo tienes centralizado
+        import { auth } from "../../js/auth.js";
+
+        const url = "https://opensheet.elk.sh/1PjRQDpbZQ6nscdRzlEOtwNpeEiyeEOGjkic6mggNEBY/1";
+        const params = new URLSearchParams(window.location.search);
+        const seccion = params.get("seccion");
+        const tituloElemento = document.getElementById("tituloGenero");
+        const grid = document.getElementById("genreGrid");
+
+        fetch(url)
+          .then(r => r.json())
+          .then(data => {
+            if (!grid) return;
+
+            const filtrados = data
+              .filter(x =>
+                x.seccion &&
+                seccion &&
+                x.seccion.trim().toLowerCase() === seccion.trim().toLowerCase()
+              );
+
+            if (!filtrados.length) {
+              grid.innerHTML = "<p style='color:white; padding-left:20px;'>No hay contenido en esta sección.</p>";
+              tituloElemento.textContent = seccion || "Sección";
+              return;
+            }
+
+            // Título
+            const titulo = filtrados[0].tituloSeccion && filtrados[0].tituloSeccion.trim() !== ""
+              ? filtrados[0].tituloSeccion
+              : seccion;
+
+            if (tituloElemento) tituloElemento.textContent = titulo;
+
+            filtrados.forEach(item => {
+              const div = document.createElement("div");
+              div.className = "genreItem";
+
+              let imgPath = item.imagen || "";
+              if (!imgPath.startsWith("http")) {
+                imgPath = imgPath.replace(/^\/+/, ""); 
+                imgPath = "../../" + imgPath; // Subir niveles para llegar a /images/
+              }
+
+              // El enlace debe ir a la página de detalles (ajusta según tu estructura)
+              // Si video.html está en /browse/, la ruta es ../video.html
+              div.innerHTML = `
+                <a href="../watch/index.html?id=${item.id}">
+                  <img src="${imgPath}" alt="${item.titulo || ''}">
+                </a>
+              `;
+
+              grid.appendChild(div);
+            });
+          })
+          .catch(err => console.error("Error al cargar el sheet:", err));
+          
+          // Lógica básica de logout si es necesario
+          const logoutBtn = document.getElementById("logoutBtn");
+          if(logoutBtn) {
+              logoutBtn.onclick = () => auth.signOut().then(() => window.location.href = "../../login.html");
+          }
+    </script>
+
+    <script src="../../nav.js"></script>
+</body>
+</html>

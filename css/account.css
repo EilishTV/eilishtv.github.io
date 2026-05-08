@@ -1,0 +1,227 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#fafafa;
+    color:#111;
+}
+
+/* TOPBAR */
+.topbar{
+    height:55px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    background:#fff;
+    border-bottom:1px solid #e5e5e5;
+}
+
+.topbar .logo{
+    height:22px;
+    object-fit:contain;
+}
+
+.topbar .user{
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.topbar .user:hover{
+    background:#f2f2f2;
+}
+
+/* LAYOUT */
+.container{
+    display:flex;
+    padding:40px;
+}
+
+.sidebar{
+    width:240px;
+}
+
+.back{
+    margin-bottom:20px;
+    font-size:14px;
+    color:#555;
+    cursor:pointer;
+}
+
+/* MENU */
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:8px;
+    cursor:pointer;
+    color:#444;
+}
+
+.menu-item:hover{
+    background:#f5f5f5;
+}
+
+.menu-item.active{
+    background:#f0f0f0;
+    font-weight:600;
+}
+
+/* CONTENT */
+.content{
+    flex:1;
+    margin-left:40px;
+}
+
+h1{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#666;
+    margin-bottom:20px;
+}
+
+.fa-lock {
+    color: #444;
+}
+
+/* CARD */
+.card{
+    background:#fff;
+    border:1px solid #e5e5e5;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:25px;
+}
+
+.badge{
+    display:inline-block;
+    background:linear-gradient(90deg,#4f46e5,#0e0469);
+    color:#fff;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.plan{
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+/* ROWS */
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-top:1px solid #eee;
+    cursor:pointer;
+}
+
+.row:hover{
+    background:#fafafa;
+}
+
+.row:first-child{
+    border-top:none;
+}
+
+.arrow{
+    color:#999;
+}
+
+/* ANIMATION */
+.fade{
+    animation:fade 0.2s ease;
+}
+
+@keyframes fade{
+    from{opacity:0;transform:translateY(5px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.profile-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+}
+
+.profile-row .left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-row .avatar{
+    width:40px;
+    height:40px;
+    border-radius:6px;
+    object-fit:cover;
+}
+
+/* RESPONSIVE PARA CELULARES */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Apila sidebar y contenido */
+        padding: 0; /* Menos espacio en móviles */
+    }
+
+    .sidebar {
+        width: 100%;
+        background: #fff;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 10px 0;
+        
+        /* Hacerlo horizontal y deslizable */
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        
+        /* Ocultar la barra de scroll en navegadores modernos */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE y Edge */
+    }
+
+    /* Ocultar la barra de scroll en Chrome, Safari y Opera */
+    .sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .back {
+        display: none; /* Opcional: oculta el "volver" en el scroll o muévelo */
+    }
+
+    .menu-item {
+        display: inline-flex; /* Para que se mantengan uno al lado del otro */
+        margin-bottom: 0;
+        margin: 0 5px;
+        padding: 8px 15px;
+        font-size: 14px;
+        flex-shrink: 0; /* Evita que los items se aplasten */
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px; /* Espacio para el contenido */
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}

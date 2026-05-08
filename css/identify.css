@@ -1,0 +1,562 @@
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+    background:black;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topBar{
+    position:absolute;
+    top:0;
+    right:0;
+    padding:25px 40px;
+    z-index:10;
+}
+
+.loginLink{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    font-size:15px;
+
+    border:2px solid white;
+    padding:10px 22px;
+    border-radius:30px;
+
+    transition:0.2s;
+}
+
+.loginLink:hover{
+    background:white;
+    color:black;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+
+    text-align:left;
+
+    background:
+    linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.65) 30%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%),
+    url("https://es.rollingstone.com/wp-content/uploads/2024/05/ApertR1387_FEA_Billie-Eilish_E_v2.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    padding:80px;
+}
+
+
+/* =========================
+   HERO CONTENT
+========================= */
+
+.logo{
+    width:170px;
+    margin-bottom:18px;
+}
+
+.title{
+    font-size:28px;
+    max-width:650px;
+    margin-bottom:20px;
+}
+
+.price{
+    font-size:20px;
+    opacity:0.7;
+    margin-bottom:18px;
+}
+
+.enter{
+    font-size:16px;
+    opacity:0.9;
+    margin-bottom:15px;
+}
+
+
+/* =========================
+   CTA
+========================= */
+
+.cta{
+    display:flex;
+    gap:10px;
+    max-width:600px;
+    width:100%;
+}
+
+.cta input{
+    flex:1;
+    padding:15px;
+    font-size:16px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+}
+
+.cta button{
+
+    padding:15px 28px;
+    font-size:16px;
+    font-weight:bold;
+
+    border-radius:30px;
+    border:none;
+
+    cursor:pointer;
+
+    background:#0063e5;
+    color:white;
+
+    transition:0.2s;
+}
+
+.cta button:hover{
+    transform:scale(1.03);
+    opacity:0.9;
+}
+
+/* =========================
+   REGISTER PAGE
+========================= */
+
+.registerPage{
+
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+    padding:20px;
+
+    background:
+    linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.95)),
+    url("../images/extras/home-background.png");
+
+    background-size:cover;
+    background-position:center;
+}
+
+.registerBox{
+    width:100%;
+    max-width:520px;
+}
+
+.registerBox h2{
+    margin-bottom:10px;
+}
+
+.desc{
+    opacity:0.8;
+    font-size:14px;
+    margin-bottom:18px;
+}
+
+.emailInfo{
+
+    background:rgba(255,255,255,0.08);
+    padding:12px;
+    border-radius:8px;
+
+    margin-bottom:18px;
+    font-size:14px;
+}
+
+.emailInfo .edit{
+    margin-left:10px;
+    text-decoration:underline;
+    cursor:pointer;
+    opacity:0.8;
+}
+
+/* =========================
+   LABELS
+========================= */
+
+.registerBox label{
+    display:block;
+    margin-bottom:6px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* =========================
+   INPUTS (UNIFICADOS)
+========================= */
+
+.registerBox input[type="text"],
+.registerBox input[type="password"]{
+
+    width:100%;
+    padding:12px;
+
+    border-radius:8px;
+    border:none;
+
+    background:rgba(255,255,255,0.08);
+    color:white;
+
+    margin-bottom:12px;
+
+    outline:none;
+    transition:0.2s;
+}
+
+.registerBox input::placeholder{
+    color:rgba(255,255,255,0.5);
+}
+
+.registerBox input:focus{
+    background:rgba(255,255,255,0.15);
+}
+
+/* =========================
+   PASSWORD RULES
+========================= */
+
+.rules{
+    font-size:12px;
+    opacity:0.7;
+    margin-bottom:12px;
+}
+
+/* =========================
+   CHECKBOX
+========================= */
+
+.check{
+    font-size:12px;
+    display:flex;
+    gap:8px;
+    margin-bottom:18px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.continueBtn{
+
+    width:100%;
+    padding:14px;
+
+    font-weight:bold;
+
+    border-radius:30px;
+    border:none;
+
+    cursor:pointer;
+
+    background:#0063e5;
+    color:white;
+
+    transition:0.2s;
+}
+
+.continueBtn:hover{
+    transform:scale(1.02);
+    opacity:0.9;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.formError{
+    color:#ff4d4d;
+    font-size:13px;
+    margin-top:10px;
+    min-height:18px;
+}
+
+/* =========================
+   LOGIN PAGE
+========================= */
+
+.loginPage{
+
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+
+    min-height:100vh;
+
+    padding:40px 20px;
+
+    background:
+    linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.95)),
+    url("../images/extras/home-background.png");
+
+    background-size:cover;
+}
+
+.loginBox{
+
+    width:100%;
+    max-width:520px;
+
+    padding:25px;
+
+    border-radius:10px;
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.log-logo{
+    width:150px;
+}
+
+.loginBox input{
+
+    padding:12px;
+    border-radius:8px;
+    border:none;
+}
+
+.loginBox button{
+
+    padding:14px;
+
+    border-radius:30px;
+    border:none;
+
+    background:#1e90ff;
+
+    color:white;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.loginBox button:hover{
+    opacity:0.9;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width:768px){
+
+.hero{
+    padding:50px 25px;
+}
+
+.logo{
+    width:140px;
+}
+
+.title{
+    font-size:24px;
+}
+
+.price{
+    font-size:18px;
+}
+
+.cta{
+    flex-direction:column;
+    gap:10px;
+}
+
+.cta button{
+    width:100%;
+}
+
+.loginLink{
+    font-size:14px;
+    padding:10px 20px;
+}
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:480px){
+
+.hero{
+    padding:40px 20px;
+}
+
+.logo{
+    width:120px;
+}
+
+.title{
+    font-size:20px;
+}
+
+.price{
+    font-size:16px;
+}
+
+.enter{
+    font-size:14px;
+}
+
+.cta input,
+.cta button{
+    padding:14px;
+    font-size:15px;
+}
+
+.loginLink{
+    font-size:14px;
+    padding:10px 18px;
+}
+
+.loginBox{
+    padding:20px;
+}
+
+.log-logo{
+    width:120px;
+}
+
+}
+
+/* =========================
+   VERIFY PAGE
+========================= */
+
+.verifyPage{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+    padding:20px;
+
+    background:
+    linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.95)),
+    url("../images/extras/home-background.png");
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+}
+
+.verifyBox{
+
+    width:100%;
+    max-width:480px;
+
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+
+    padding:30px;
+    border-radius:12px;
+
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.verifyLogo{
+    width:140px;
+    margin-bottom:10px;
+}
+
+.verifyTitle{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.verifyDesc{
+    font-size:14px;
+    opacity:0.8;
+    line-height:1.5;
+}
+
+.verifyWarning{
+    font-size:13px;
+    opacity:0.6;
+}
+
+.verifyActions{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.verifyBtn{
+
+    flex:1;
+
+    padding:14px;
+
+    border:none;
+    border-radius:30px;
+
+    font-weight:bold;
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+.verifyPrimary{
+    background:#0063e5;
+    color:white;
+}
+
+.verifyPrimary:hover{
+    transform:scale(1.03);
+    opacity:0.9;
+}
+
+.verifySecondary{
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+.verifySecondary:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+.verifyStatus{
+    font-size:13px;
+    opacity:0.8;
+    min-height:18px;
+}

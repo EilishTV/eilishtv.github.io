@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificar correo | EilishTV</title>
+<link rel="stylesheet" href="../../css/identify.css">
+</head>
+
+<body class="verifyPage">
+
+<div class="verifyBox">
+
+    <img src="/images/extras/logo.png" class="verifyLogo">
+
+    <h2 class="verifyTitle">Verificá tu correo</h2>
+
+    <p class="verifyDesc">
+        Te enviamos un email para confirmar tu cuenta.
+        Revisá tu bandeja principal o spam.
+    </p>
+
+    <p class="verifyWarning">
+        Puede tardar unos segundos en llegar.
+    </p>
+
+    <div class="verifyActions">
+        <button id="reload" class="verifyBtn verifyPrimary">
+            Ya verifiqué
+        </button>
+
+        <button id="resend" class="verifyBtn verifySecondary">
+            Reenviar
+        </button>
+    </div>
+
+    <p id="status" class="verifyStatus"></p>
+
+</div>
+
+</body>
+
+<script type="module">
+
+// =======================================
+// FIREBASE INIT (🔥 ESTO TE FALTABA)
+// =======================================
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getAuth,
+    sendEmailVerification
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyC3x7H9-JliDqEha3P-Ne_X9FyIFmxw7ec",
+    authDomain: "eilishtv-935ee.firebaseapp.com",
+    projectId: "eilishtv-935ee",
+    storageBucket: "eilishtv-935ee.firebasestorage.app",
+    messagingSenderId: "95065190642",
+    appId: "1:95065190642:web:7174eb5746a591ebdce06b",
+    measurementId: "G-TQFR3YRJJ6"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// =======================================
+// ELEMENTOS
+// =======================================
+
+const status = document.getElementById("status");
+
+// =======================================
+// BOTÓN: YA VERIFIQUÉ
+// =======================================
+
+document.getElementById("reload").onclick = async () => {
+
+    if (!auth.currentUser) {
+        status.innerText = "No hay usuario logueado.";
+        return;
+    }
+
+    await auth.currentUser.reload();
+
+        // ... dentro del botón reload ...
+    if (auth.currentUser.emailVerified) {
+    // Si tu archivo principal de cuenta está en /account/index.html o /account.html
+    window.location.href = "/account/#profiles"; 
+ 
+
+    } else {
+        status.innerText = "Todavía no verificaste tu correo.";
+    }
+
+};
+
+// =======================================
+// BOTÓN: REENVIAR
+// =======================================
+
+document.getElementById("resend").onclick = async () => {
+
+    if (!auth.currentUser) {
+        status.innerText = "No hay usuario logueado.";
+        return;
+    }
+
+    try {
+        await sendEmailVerification(auth.currentUser);
+        status.innerText = "Correo reenviado correctamente.";
+    } catch (err) {
+        console.error(err);
+        status.innerText = "Error al reenviar el correo.";
+    }
+
+};
+
+</script>
+
+</body>
+</html>
