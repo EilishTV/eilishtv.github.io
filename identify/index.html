@@ -4,86 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EilishTV!</title>
-    <link rel="stylesheet" href="../css/identify.css">
-
+    
     <style>
-        /* --- ESTILOS DE MANTENIMIENTO --- */
+        /* 1. Reset y prevención de scroll en Safari */
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            position: fixed; /* Evita que el navegador de Instagram intente scrollear */
+        }
+
         #maintenance-overlay {
             display: flex; 
             position: fixed;
             top: 0; left: 0; 
-            width: 100vw; 
-            height: 100vh;
-            z-index: 99999; /* Máximo posible */
+            width: 100%; height: 100%;
+            z-index: 1000;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: white;
-            font-family: sans-serif;
-            background-color: #000;
-            
+        }
+
+        /* Capa de fondo optimizada para evitar crasheos de memoria */
+        .bg-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('https://imglink.cc/cdn/dbsi9yYN-O.png');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
+            z-index: -1;
+            opacity: 0.8;
         }
 
         @media (max-width: 768px) {
-            #maintenance-overlay {
-                background-image: url('https://imglink.cc/cdn/CoWSxtqNhe.png');
-                background-size: cover; 
-                background-position: center center;
-            }
+            .bg-layer { background-image: url('https://imglink.cc/cdn/CoWSxtqNhe.png'); }
         }
 
-        .maint-card {
-            padding: 20px;
-            width: 90%;
-            max-width: 450px;
-            background: transparent;
-        }
+        .maint-card { width: 90%; max-width: 450px; z-index: 2; }
 
-        #countdown {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-        }
+        #countdown { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
         .time-box {
-            background: rgba(0, 0, 0, 0.6); 
-            padding: 10px;
-            border-radius: 10px;
-            min-width: 65px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .time-box span { display: block; font-size: 1.5rem; font-weight: bold; }
-        .time-box label { font-size: 0.6rem; text-transform: uppercase; }
-
-        .code-group { margin-top: 30px; }
-        .code-inputs { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
-        .code-box {
-            width: 45px;
-            height: 55px;
             background: rgba(0, 0, 0, 0.7); 
-            border: 2px solid white;
+            padding: 8px;
+            border-radius: 8px;
+            min-width: 60px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .time-box span { display: block; font-size: 1.3rem; font-weight: bold; }
+        .time-box label { font-size: 0.55rem; text-transform: uppercase; opacity: 0.7; }
+
+        .code-inputs { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        
+        .code-box {
+            width: 45px; height: 55px;
+            background: #000; 
+            border: 2px solid #fff;
             border-radius: 8px;
             text-align: center;
-            font-size: 1.5rem;
-            color: white;
+            font-size: 16px; /* Mínimo 16px para evitar zoom automático en iPhone */
+            color: #fff;
             outline: none;
             
-        }
-        /* Evita zoom automático en iPhone al hacer focus */
-        @media screen and (max-width: 768px) {
-            .code-box { font-size: 16px; } 
+            /* Solución al amarillo: prefijo + estándar */
+            -webkit-appearance: none;
+            appearance: none;
         }
     </style>
 </head>
 
-<body style="overflow: hidden; width: 100%; height: 100%;">
-
+<body>
     <div id="maintenance-overlay">
+        <div class="bg-layer"></div>
         <div class="maint-card">
             <div id="countdown">
                 <div class="time-box"><span id="days">00</span><label>Días</label></div>
@@ -93,7 +88,7 @@
             </div>
 
             <div class="code-group">
-                <p style="font-size: 0.8rem; text-shadow: 1px 1px 5px #000;">Access Code</p>
+                <p style="font-size: 0.8rem; margin-bottom: 5px; text-shadow: 1px 1px 3px #000;">Access Code</p>
                 <div class="code-inputs">
                     <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
                     <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
@@ -104,80 +99,61 @@
         </div>
     </div>
 
-    <!-- CONTENIDO ORIGINAL -->
-    <header class="topBar">
-        <a href="login/" class="loginLink">Log in</a>
-    </header>
-
-    <section class="hero">
-        <img src="../images/extras/logo.png" class="logo" alt="EilishTV">
-        <h1 class="title">Exclusive shows, movies, and documentaries...</h1>
-        <div class="cta">
-            <input type="email" id="emailInput" placeholder="Enter your email">
-            <button id="startBtn">Start</button>
-        </div>
+    <!-- Contenido que se mostrará al desbloquear -->
+    <section id="main-site" style="display:none;">
+        <!-- Aquí va tu contenido original del hero, header, etc. -->
     </section>
 
-    <!-- CARGA EL JS ORIGINAL PERO CON PRECAUCIÓN -->
-    <script src="../js/identify.js" defer></script>
-
     <script>
-        // --- VARIABLE DE CONTROL ---
-        const isMaintenanceActive = true;
+        const SECRET_CODE = "1201";
+        const overlay = document.getElementById('maintenance-overlay');
 
-        // --- LÓGICA DEL CONTADOR ---
-        function timer() {
-            const now = new Date();
-            const saturday = new Date();
-            // Esto busca el PRÓXIMO sábado 00:00
-            saturday.setDate(now.getDate() + (6 - now.getDay())); 
-            saturday.setHours(0, 0, 0, 0);
-
-            const diff = saturday - now;
-            
-            if (diff <= 0 || !isMaintenanceActive) {
-                unlockPage();
-                return;
-            }
-
-            document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-            document.getElementById('hours').innerText = Math.floor((diff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
-            document.getElementById('minutes').innerText = Math.floor((diff / 1000 / 60) % 60).toString().padStart(2, '0');
-            document.getElementById('seconds').innerText = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
-        }
-        
         function unlockPage() {
-            document.getElementById('maintenance-overlay').style.display = 'none';
+            overlay.style.display = 'none';
             document.body.style.overflow = 'auto';
+            document.body.style.position = 'static';
+            
+            // Carga diferida de scripts pesados
+            const script = document.createElement('script');
+            script.src = "../js/identify.js";
+            document.body.appendChild(script);
+            
+            // Mostrar el sitio
+            const mainSite = document.getElementById('main-site');
+            if(mainSite) mainSite.style.display = 'block';
         }
 
-        setInterval(timer, 1000);
-        timer();
+        function updateTimer() {
+            const now = new Date();
+            const target = new Date();
+            target.setDate(now.getDate() + (6 - now.getDay())); 
+            target.setHours(0, 0, 0, 0);
+            const diff = target - now;
 
-        // --- LÓGICA DE LAS CAJITAS (Optimizado para móvil) ---
+            if (diff <= 0) { unlockPage(); return; }
+
+            document.getElementById('days').textContent = Math.floor(diff / 86400000).toString().padStart(2, '0');
+            document.getElementById('hours').textContent = Math.floor((diff / 3600000) % 24).toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = Math.floor((diff / 60000) % 60).toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
         const inputs = document.querySelectorAll('.code-box');
-        const SECRET_CODE = "1201"; 
-
         inputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
-                // Solo tomar el último carácter ingresado
-                if (e.target.value.length > 1) {
-                    e.target.value = e.target.value.slice(-1);
-                }
-
-                if (e.target.value.length === 1 && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                }
+                if (input.value.length > 1) input.value = input.value.slice(-1);
+                if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
                 
                 let code = "";
                 inputs.forEach(i => code += i.value);
-                if (code === SECRET_CODE) {
-                    unlockPage();
-                }
+                if (code === SECRET_CODE) unlockPage();
             });
 
             input.addEventListener('keydown', (e) => {
-                if (e.key === "Backspace" && !e.target.value && index > 0) {
+                if (e.key === "Backspace" && !input.value && index > 0) {
                     inputs[index - 1].focus();
                 }
             });
