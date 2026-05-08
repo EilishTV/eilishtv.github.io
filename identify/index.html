@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EilishTV!</title>
     <link rel="stylesheet" href="../css/identify.css">
 
@@ -11,16 +11,18 @@
         #maintenance-overlay {
             display: flex; 
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10000;
+            top: 0; left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            z-index: 99999; /* Máximo posible */
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: white;
             font-family: sans-serif;
+            background-color: #000;
             
-            /* IMAGEN DESKTOP SIN CAPAS NEGRAS */
             background-image: url('../../images/desktopcs.png');
             background-size: cover;
             background-position: center;
@@ -29,40 +31,19 @@
 
         @media (max-width: 768px) {
             #maintenance-overlay {
-                /* IMAGEN CELULAR - Sin capas negras y cubriendo todo */
                 background-image: url('../../images/movilcs.png');
                 background-size: cover; 
                 background-position: center center;
             }
-            .maint-title { font-size: 1.8rem !important; }
         }
 
-        /* QUITAMOS EL FONDO NEGRO DE LA CARD */
         .maint-card {
             padding: 20px;
             width: 90%;
             max-width: 450px;
-            background: transparent; /* Totalmente transparente */
+            background: transparent;
         }
 
-        .maint-logo-img { 
-            width: 140px; 
-            margin-bottom: 15px; 
-            filter: drop-shadow(0 0 8px rgba(0,0,0,0.5)); /* Sombra para que el logo resalte */
-        }
-
-        .maint-title { 
-            font-size: 2.5rem; 
-            margin-bottom: 10px; 
-            font-weight: bold; 
-            text-shadow: 2px 2px 15px rgba(0,0,0,0.8); /* Sombra al texto para leer sobre la imagen */
-        }
-
-        .maint-card p {
-            text-shadow: 1px 1px 10px rgba(0,0,0,0.8);
-        }
-        
-        /* Contador con estilo flotante */
         #countdown {
             display: flex;
             justify-content: center;
@@ -70,7 +51,7 @@
             margin: 25px 0;
         }
         .time-box {
-            background: rgba(0, 0, 0, 0.3); /* Un fondo muy sutil solo para los números */
+            background: rgba(0, 0, 0, 0.6); 
             padding: 10px;
             border-radius: 10px;
             min-width: 65px;
@@ -79,27 +60,29 @@
         .time-box span { display: block; font-size: 1.5rem; font-weight: bold; }
         .time-box label { font-size: 0.6rem; text-transform: uppercase; }
 
-        /* Cajitas de Código */
         .code-group { margin-top: 30px; }
         .code-inputs { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
         .code-box {
             width: 45px;
             height: 55px;
-            background: rgba(0, 0, 0, 0.5); /* Fondo oscuro para que se vea el código */
+            background: rgba(0, 0, 0, 0.7); 
             border: 2px solid white;
             border-radius: 8px;
             text-align: center;
             font-size: 1.5rem;
             color: white;
             outline: none;
+            -webkit-appearance: none; /* Fix para iOS */
         }
-        .code-box:focus { border-color: #00ff00; }
+        /* Evita zoom automático en iPhone al hacer focus */
+        @media screen and (max-width: 768px) {
+            .code-box { font-size: 16px; } 
+        }
     </style>
 </head>
 
-<body>
+<body style="overflow: hidden; width: 100%; height: 100%;">
 
-    <!-- CAPA DE MANTENIMIENTO -->
     <div id="maintenance-overlay">
         <div class="maint-card">
             <div id="countdown">
@@ -112,44 +95,48 @@
             <div class="code-group">
                 <p style="font-size: 0.8rem; text-shadow: 1px 1px 5px #000;">Access Code</p>
                 <div class="code-inputs">
-                    <input type="text" maxlength="1" class="code-box">
-                    <input type="text" maxlength="1" class="code-box">
-                    <input type="text" maxlength="1" class="code-box">
-                    <input type="text" maxlength="1" class="code-box">
+                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
+                    <input type="number" pattern="\d*" inputmode="numeric" class="code-box">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TODO TU CONTENIDO ORIGINAL SIGUE ABAJO IGUAL -->
+    <!-- CONTENIDO ORIGINAL -->
     <header class="topBar">
         <a href="login/" class="loginLink">Log in</a>
     </header>
 
     <section class="hero">
         <img src="../images/extras/logo.png" class="logo" alt="EilishTV">
-        <h1 class="title">Exclusive shows, movies, and documentaries from Billie Eilish and more.</h1>
-        <p class="price">Completely free</p>
-        <p class="enter">Enter your email to get started.</p>
+        <h1 class="title">Exclusive shows, movies, and documentaries...</h1>
         <div class="cta">
             <input type="email" id="emailInput" placeholder="Enter your email">
             <button id="startBtn">Start</button>
         </div>
     </section>
 
-    <script src="../js/identify.js"></script>
+    <!-- CARGA EL JS ORIGINAL PERO CON PRECAUCIÓN -->
+    <script src="../js/identify.js" defer></script>
 
     <script>
+        // --- VARIABLE DE CONTROL ---
+        const isMaintenanceActive = true;
+
         // --- LÓGICA DEL CONTADOR ---
         function timer() {
             const now = new Date();
             const saturday = new Date();
+            // Esto busca el PRÓXIMO sábado 00:00
             saturday.setDate(now.getDate() + (6 - now.getDay())); 
             saturday.setHours(0, 0, 0, 0);
 
             const diff = saturday - now;
-            if (diff <= 0) {
-                document.getElementById('maintenance-overlay').style.display = 'none';
+            
+            if (diff <= 0 || !isMaintenanceActive) {
+                unlockPage();
                 return;
             }
 
@@ -158,24 +145,37 @@
             document.getElementById('minutes').innerText = Math.floor((diff / 1000 / 60) % 60).toString().padStart(2, '0');
             document.getElementById('seconds').innerText = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
         }
+        
+        function unlockPage() {
+            document.getElementById('maintenance-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
         setInterval(timer, 1000);
         timer();
 
-        // --- LÓGICA DE LAS 4 CAJITAS ---
+        // --- LÓGICA DE LAS CAJITAS (Optimizado para móvil) ---
         const inputs = document.querySelectorAll('.code-box');
-        const SECRET_CODE = "1201"; // TU CÓDIGO SECRETO
+        const SECRET_CODE = "1201"; 
 
         inputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
+                // Solo tomar el último carácter ingresado
+                if (e.target.value.length > 1) {
+                    e.target.value = e.target.value.slice(-1);
+                }
+
                 if (e.target.value.length === 1 && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
+                
                 let code = "";
                 inputs.forEach(i => code += i.value);
                 if (code === SECRET_CODE) {
-                    document.getElementById('maintenance-overlay').style.display = 'none';
+                    unlockPage();
                 }
             });
+
             input.addEventListener('keydown', (e) => {
                 if (e.key === "Backspace" && !e.target.value && index > 0) {
                     inputs[index - 1].focus();
@@ -183,6 +183,5 @@
             });
         });
     </script>
-
 </body>
 </html>
