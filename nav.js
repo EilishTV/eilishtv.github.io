@@ -12,16 +12,41 @@ if (navContainer) {
     <nav>
 
         <a class="navLogo" href="/index.html">
-            <img src="/images/extras/logo.png" alt="logo">
+            <img
+                src="/images/extras/logo.png"
+                alt="logo"
+            >
         </a>
 
+        <!-- MOBILE BUTTON -->
+        <button class="mobileMenuBtn">
+
+            <i class="fas fa-bars"></i>
+
+        </button>
+
+        <!-- MENU -->
         <div class="navMenu">
-            <a href="/browse/">Inicio</a>
-            <a href="#">Películas</a>
-            <a href="#">Shows</a>
-            <a href="/browse/my-list/">Mi Lista</a>
+
+            <a href="/browse/">
+                Inicio
+            </a>
+
+            <a href="#">
+                Películas
+            </a>
+
+            <a href="#">
+                Shows
+            </a>
+
+            <a href="/browse/my-list/">
+                Mi Lista
+            </a>
+
         </div>
 
+        <!-- SEARCH -->
         <form
             class="searchContainer"
             action="/browse/search/"
@@ -44,6 +69,7 @@ if (navContainer) {
 
         </form>
 
+        <!-- USER -->
         <div class="userMenu">
 
             <img
@@ -77,7 +103,7 @@ if (navContainer) {
                 </div>
 
                 <a href="/account/#profiles">
-                    Perfil
+                    Perfill
                 </a>
 
                 <a href="/account/">
@@ -88,11 +114,17 @@ if (navContainer) {
                     Historial
                 </a>
 
-                <a href="https://instagram.com/eilishtvwebsite">
+                <a
+                    href="https://instagram.com/eilishtvwebsite"
+                    target="_blank"
+                >
                     Instagram
                 </a>
 
-                <a href="https://instagram.com/santbeq">
+                <a
+                    href="https://instagram.com/santbeq"
+                    target="_blank"
+                >
                     Personal Instagram
                 </a>
 
