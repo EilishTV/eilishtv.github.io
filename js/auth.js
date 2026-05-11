@@ -88,27 +88,52 @@ async function getUserProfile(uid) {
 // =======================================
 
 function updateNavUI(user, profile) {
-    const navAvatars = document.querySelectorAll(".navAvatar");
-    const userImg = document.querySelector(".userImg");
+
+    const navAvatars = document.querySelectorAll(".navAvatar, .userImg");
     const navName = document.getElementById("navProfileName");
     const emailEl = document.getElementById("userEmail");
 
-    const name = profile?.name || user.displayName || "User";
-    const avatar = profile?.avatar || user.photoURL || "/images/avatars/default.png";
+    const finalName =
+        profile?.name?.trim() ||
+        user?.displayName?.trim() ||
+        "User";
 
-    if (navName) navName.textContent = name;
+    const finalAvatar =
+        profile?.avatar?.trim() ||
+        user?.photoURL?.trim() ||
+        "/images/avatars/default.png";
 
-    navAvatars.forEach(img => {
-        if (img) img.src = avatar;
-    });
+    // NAME
+    if (navName) {
+        navName.textContent = finalName;
+    }
 
-    if (userImg) userImg.src = avatar;
-
+    // EMAIL
     if (emailEl && user?.email) {
         emailEl.textContent = user.email;
     }
-}
 
+    // AVATARS
+    navAvatars.forEach(img => {
+
+        if (!img) return;
+
+        // evita imágenes viejas cacheadas
+        const noCacheAvatar =
+            finalAvatar +
+            (finalAvatar.includes("?") ? "&" : "?") +
+            "t=" + Date.now();
+
+        // limpiar primero
+        img.removeAttribute("src");
+
+        requestAnimationFrame(() => {
+            img.src = noCacheAvatar;
+        });
+
+    });
+
+}
 
 // =======================================
 // SIGN UP
