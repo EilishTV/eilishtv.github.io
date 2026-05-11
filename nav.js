@@ -1,131 +1,325 @@
-/* =========================
-   NAV Y DROPDOWN USUARIO
-========================= */
-const userMenu = document.querySelector(".userMenu");
-const dropDown = document.querySelector(".dropDown");
-const profileArrow = document.getElementById("profileArrow");
-const openProfiles = document.getElementById("openProfiles");
+// =======================================
+// RENDER NAV
+// =======================================
+
+const navContainer =
+    document.getElementById("mainNav");
+
+if (navContainer) {
+
+    navContainer.innerHTML = `
+
+    <nav>
+
+        <a class="navLogo" href="/index.html">
+            <img src="/images/extras/logo.png" alt="logo">
+        </a>
+
+        <div class="navMenu">
+            <a href="/browse/">Inicio</a>
+            <a href="#">Películas</a>
+            <a href="#">Shows</a>
+            <a href="/browse/my-list/">Mi Lista</a>
+        </div>
+
+        <form
+            class="searchContainer"
+            action="/browse/search/"
+            method="GET"
+        >
+
+            <input
+                type="text"
+                class="searchInput"
+                name="q"
+                placeholder="Buscar..."
+            >
+
+            <button
+                type="submit"
+                class="searchBtn"
+            >
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </form>
+
+        <div class="userMenu">
+
+            <img
+                class="userImg"
+                src="/images/avatars/default.png"
+                alt="avatar"
+            >
+
+            <div class="dropDown">
+
+                <div
+                    class="profileHeader"
+                    id="openProfiles"
+                >
+
+                    <img
+                        class="navAvatar"
+                        src="/images/avatars/default.png"
+                        alt="avatar"
+                    >
+
+                    <span id="navProfileName">
+                        User
+                    </span>
+
+                    <i
+                        class="fas fa-chevron-right"
+                        id="profileArrow"
+                    ></i>
+
+                </div>
+
+                <a href="/account/#profiles">
+                    Perfil
+                </a>
+
+                <a href="/account/">
+                    Cuenta
+                </a>
+
+                <a href="/account/history/">
+                    Historial
+                </a>
+
+                <a href="https://instagram.com/eilishtvwebsite">
+                    Instagram
+                </a>
+
+                <a href="https://instagram.com/santbeq">
+                    Personal Instagram
+                </a>
+
+                <a href="mailto:eilishtvmanagement@gmail.com">
+                    Help
+                </a>
+
+                <a href="#" id="logoutBtn">
+                    Cerrar sesión
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    `;
+}
+
+
+// =======================================
+// ELEMENTOS
+// =======================================
+
+const userMenu =
+    document.querySelector(".userMenu");
+
+const dropDown =
+    document.querySelector(".dropDown");
+
+const profileArrow =
+    document.getElementById("profileArrow");
+
+
+// =======================================
+// DROPDOWN
+// =======================================
 
 let closeTimer;
 
-// Dropdown hover
 if (userMenu && dropDown) {
+
     const showMenu = () => {
+
         clearTimeout(closeTimer);
+
         dropDown.style.display = "flex";
-        if (profileArrow) profileArrow.style.opacity = "1";
+
+        if (profileArrow) {
+            profileArrow.style.opacity = "1";
+        }
     };
 
     const hideMenu = () => {
+
         closeTimer = setTimeout(() => {
+
             dropDown.style.display = "none";
-            if (profileArrow) profileArrow.style.opacity = "0";
-        }, 150);
+
+            if (profileArrow) {
+                profileArrow.style.opacity = "0";
+            }
+
+        }, 120);
     };
 
-    userMenu.addEventListener("mouseenter", showMenu);
-    userMenu.addEventListener("mouseleave", hideMenu);
+    userMenu.addEventListener(
+        "mouseenter",
+        showMenu
+    );
 
-    dropDown.addEventListener("mouseenter", showMenu);
-    dropDown.addEventListener("mouseleave", hideMenu);
+    userMenu.addEventListener(
+        "mouseleave",
+        hideMenu
+    );
+
+    dropDown.addEventListener(
+        "mouseenter",
+        showMenu
+    );
+
+    dropDown.addEventListener(
+        "mouseleave",
+        hideMenu
+    );
 }
 
-/* =========================
-   BUSCADOR
-========================= */
-const searchBtn = document.querySelector(".searchBtn");
-const searchInput = document.querySelector(".searchInput");
+
+// =======================================
+// SEARCH
+// =======================================
+
+const searchBtn =
+    document.querySelector(".searchBtn");
+
+const searchInput =
+    document.querySelector(".searchInput");
 
 if (searchBtn && searchInput) {
+
     searchBtn.addEventListener("click", () => {
+
         searchInput.classList.toggle("show");
-        if (searchInput.classList.contains("show")) searchInput.focus();
-    });
-}
 
-/* =========================
-   LOGOUT
-========================= */
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (window.logoutUser) {
-            window.logoutUser();
-        } else {
-            console.error("logoutUser no está disponible todavía");
+        if (
+            searchInput.classList.contains("show")
+        ) {
+            searchInput.focus();
         }
+
     });
+
 }
 
 
-/* =========================
-   PERFIL ACTIVO EN NAV (SAFE FIX)
-   - no pisa Firebase
-   - sirve como fallback F5
-   - no genera race conditions
-========================= */
+// =======================================
+// FIREBASE NAV
+// =======================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+function applyNavData() {
 
-    const navAvatars = document.querySelectorAll(".navAvatar");
-    const userImg = document.querySelector(".userImg");
-    const navName = document.getElementById("navProfileName");
+    const navName =
+        document.getElementById("navProfileName");
 
-    // =========================
-    // 🔥 FALLBACK LOCAL STORAGE
-    // =========================
-    const storedName = localStorage.getItem("navProfileName");
-    const storedAvatar = localStorage.getItem("navProfileAvatar");
+    const navAvatar =
+        document.querySelector(".navAvatar");
 
-    if (storedName && navName) {
+    const userImg =
+        document.querySelector(".userImg");
+
+    const storedName =
+        localStorage.getItem("navProfileName");
+
+    const storedAvatar =
+        localStorage.getItem("navProfileAvatar");
+
+    if (navName && storedName) {
         navName.textContent = storedName;
     }
 
-    if (storedAvatar) {
-        navAvatars.forEach(img => img.src = storedAvatar);
-        if (userImg) userImg.src = storedAvatar;
+    if (navAvatar && storedAvatar) {
+        navAvatar.src = storedAvatar;
     }
 
-    // =========================
-    // 🔥 EXPORT GLOBAL SAFE WAIT
-    // =========================
-    window.waitForElements = function () {
-        return new Promise((resolve) => {
+    if (userImg && storedAvatar) {
+        userImg.src = storedAvatar;
+    }
 
-            const check = () => {
-                const navAvatars = document.querySelectorAll(".navAvatar");
-                const userImg = document.querySelector(".userImg");
-                const navName = document.getElementById("navProfileName");
+}
 
-                if (navName && userImg) {
-                    return resolve({
-                        navAvatars,
-                        userImg,
-                        navName
-                    });
-                }
+applyNavData();
 
-                requestAnimationFrame(check);
-            };
 
-            check();
-        });
-    };
+// =======================================
+// AUTH LISTENER
+// =======================================
+
+const authWait = setInterval(() => {
+
+    if (
+        window.auth &&
+        window.firebaseOnAuth
+    ) {
+
+        clearInterval(authWait);
+
+        window.firebaseOnAuth(
+            window.auth,
+            (user) => {
+
+                if (!user) return;
+
+                applyNavData();
+
+            }
+        );
+
+    }
+
+}, 50);
+
+
+// =======================================
+// LOGOUT
+// =======================================
+
+document.addEventListener("click", async (e) => {
+
+    if (e.target.id === "logoutBtn") {
+
+        e.preventDefault();
+
+        if (window.logoutUser) {
+            await window.logoutUser();
+        }
+
+    }
 
 });
-/* =========================
-   ABRIR OVERLAY DE PERFILES
-========================= */
-if (openProfiles) {
-    openProfiles.addEventListener("click", () => {
-        const overlay = document.getElementById("profileOverlay");
+
+
+// =======================================
+// OVERLAY
+// =======================================
+
+document.addEventListener("click", (e) => {
+
+    if (
+        e.target.closest("#openProfiles")
+    ) {
+
+        const overlay =
+            document.getElementById(
+                "profileOverlay"
+            );
+
         if (overlay) {
+
             overlay.style.display = "flex";
-            // Quitamos el estado de 'perfil seleccionado' para que el script del overlay cargue los perfiles
-            sessionStorage.removeItem("profileSelected");
+
+            sessionStorage.removeItem(
+                "profileSelected"
+            );
+
         }
-        if (profileArrow) profileArrow.style.opacity = "0";
-    });
-}
+
+    }
+
+});

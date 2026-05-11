@@ -271,6 +271,8 @@ nav {
     border-radius: 4px;
 }
 
+
+
 #profileArrow {
     margin-left: 68px;
     font-size: 12px;
@@ -325,20 +327,25 @@ nav {
 .dropDown a:hover {
     text-decoration: underline;
 }
-
 /* ============================================================
-   NAVEGACIÓN MÓVIL: AJUSTE DE ESPACIADO Y BLOQUE SÓLIDO
+   NAV MOBILE FIX (ESTABLE + SIN BUGS HOVER/SAFARI)
    ============================================================ */
 @media (max-width: 768px) {
+
     nav {
-        height: 80px; 
-        padding: 0 20px; /* Un poco más de aire a los lados del nav */
+        height: 80px;
+        padding: 0 20px;
         display: flex;
         align-items: center;
         background-color: #090b13;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
     }
 
-    /* Logo: Mantiene su forma sin estirarse */
+    /* ================= LOGO ================= */
     .navLogo {
         width: 70px;
         flex-shrink: 0;
@@ -349,51 +356,34 @@ nav {
         object-fit: contain;
     }
 
-    /* CONTENEDOR DEL MENÚ - SEPARADO DEL LOGO */
+    /* ================= MENU ================= */
     .navMenu {
         position: relative;
         display: flex;
         align-items: center;
-        /* Aumentamos el margen para que no toque el logo */
-        margin-left: 25px; 
+        margin-left: 25px;
         margin-right: auto;
         height: 80px;
     }
 
-    /* Link de "Inicio" - Clickable e independiente */
     .navMenu a:first-child {
         display: flex;
         align-items: center;
         font-size: 14px;
         color: #f9f9f9;
-        text-transform: none;
         padding: 0;
-        z-index: 10;
         white-space: nowrap;
     }
 
-    /* LA FLECHA - Separada para disparar el menú sin navegar */
+    /* ❌ IMPORTANTE: quitar hover fake en móvil */
     .navMenu::after {
         content: "";
-        width: 0; height: 0;
-        margin-left: 10px; /* Espacio entre el texto y la flecha */
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 6px solid #f9f9f9;
-        display: inline-block;
-        transition: transform 0.3s ease;
-        cursor: pointer;
+        display: none;
     }
 
-    /* Rotación de flecha al abrir */
-    .navMenu:hover::after {
-        transform: rotate(180deg);
-    }
+    /* ================= DROPDOWN MOBILE (FIX REAL) ================= */
 
-    /* EL BLOQUE DESPLEGABLE - UNIFICADO (Sin huecos) */
     .navMenu a:not(:first-child) {
-        visibility: hidden;
-        opacity: 0;
         position: absolute;
         left: 0;
         width: 170px;
@@ -404,29 +394,34 @@ nav {
         border-left: 1px solid #333;
         border-right: 1px solid #333;
         z-index: 100;
-        /* Transición suave hacia abajo */
-        transform: translateY(-5px);
-        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+
+        /* estado oculto */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+
+        transition: 0.25s ease;
     }
 
-    /* Mostrar bloque completo al hacer hover */
-    .navMenu:hover a:not(:first-child) {
-        visibility: visible;
+    /* 👇 SOLO JS va a controlar esto (NO hover) */
+    .navMenu.open a:not(:first-child) {
         opacity: 1;
+        visibility: visible;
         transform: translateY(0);
-        display: block;
     }
 
-    /* POSICIONAMIENTO PEGADO (Calculado para bloque único) */
-    .navMenu a:nth-child(2) { 
-        top: 62px; /* Pegado justo al límite del nav */
+    /* posiciones */
+    .navMenu a:nth-child(2) {
+        top: 62px;
         border-top: 1px solid #444;
         border-radius: 4px 4px 0 0;
     }
+
     .navMenu a:nth-child(3) { top: 108px; }
     .navMenu a:nth-child(4) { top: 154px; }
-    .navMenu a:nth-child(5) { 
-        top: 200px; 
+
+    .navMenu a:nth-child(5) {
+        top: 200px;
         border-bottom: 1px solid #444;
         border-radius: 0 0 4px 4px;
     }
@@ -435,12 +430,12 @@ nav {
         background-color: #1f232e;
     }
 
-    /* --- BUSCADOR --- */
+    /* ================= SEARCH ================= */
     .searchContainer:hover .searchInput {
         width: 85px;
     }
 
-    /* --- AVATAR (Cuadrado Original) --- */
+    /* ================= USER ================= */
     .userMenu {
         width: 38px;
         height: 38px;
@@ -450,11 +445,10 @@ nav {
     .userImg {
         width: 100%;
         height: 100%;
-        border-radius: 4px; 
-        object-fit: cover; /* No deforma la imagen */
+        border-radius: 4px;
+        object-fit: cover;
     }
 }
-
 /* ============================================================
    4. ESTRUCTURA PRINCIPAL (MAIN Y SLIDER)
    ============================================================ */
