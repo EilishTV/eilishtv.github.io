@@ -25,56 +25,51 @@
 
     <!-- NAVIGATION -->
     <nav>
-    <a class="navLogo" href="/home/index.html">
-        <img src="/home/images/extras/logo.png" alt="EilishTV"/>
-    </a>
+        <a class="navLogo" href="/index.html">
+            <img src="../images/extras/logo.png" alt="EilishTV"/>
+        </a>
 
-    <!-- Main Menu -->
-    <div class="navMenu">
-        <a href="/home/browse/">Inicio</a>
-        <a href="#">Películas</a>
-        <a href="#">Shows</a>
-        <a href="/home/browse/my-list/">Mi Lista</a>
-    </div>
-
-    <!-- Search -->
-    <form class="searchContainer" action="/home/browse/search/" method="GET">
-        <input 
-            type="text" 
-            class="searchInput" 
-            name="q"
-            placeholder="Buscar..."
-        />
-        <button type="submit" class="searchBtn">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    </form>
-
-    <!-- User Menu -->
-    <div class="userMenu">
-        <img class="userImg" src="/home/images/avatars/avatar1.jpeg" alt="avatar" />
-
-        <div class="dropDown">
-            <div class="profileHeader" id="openProfiles">
-                <img class="navAvatar" src="/home/images/avatars/avatar1.jpeg" alt="avatar">
-                <span id="navProfileName"></span>
-                <i class="fas fa-chevron-right" id="profileArrow"></i>
-            </div>
-
-            <a href="/home/account/#profiles">Perfil</a>
-            <a href="/home/account/">Cuenta</a>
-            <a href="/home/account/history/">Historial</a>
-
-            <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
-            <a href="https://instagram.com/santbeq">Personal Instagram</a>
-
-            <a href="mailto:eilishtvmanagement@gmail.com">Help</a>
-
-            <a href="#" id="logoutBtn">Cerrar sesión</a>
+        <!-- Main Menu -->
+        <div class="navMenu">
+            <a href="/browse/">Inicio</a>
+            <a href="#">Peliculas</a>
+            <a href="#">Shows</a>
+            <a href="/browse/my-list/">Mi Lista</a>
         </div>
-    </div>
-</nav>
 
+        <!-- Search -->
+        <form class="searchContainer" action="/browse/search/" method="GET">
+            <input 
+                type="text" 
+                class="searchInput" 
+                name="q"
+                placeholder="Search..."
+            />
+            <button type="submit" class="searchBtn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <!-- User Menu -->
+        <div class="userMenu">
+            <img class="userImg" src="../images/avatars/avatar1.jpeg" alt="avatar" />
+            <div class="dropDown">
+                <div class="profileHeader" id="openProfiles">
+                    <img class="navAvatar" src="../images/avatars/avatar1.jpeg" alt="avatar">
+                    <span id="navProfileName"></span>
+                    <i class="fas fa-chevron-right" id="profileArrow"></i>
+                </div>
+
+                <a href="/account/#profiles">Perfil</a>
+                <a href="/account/">Cuenta</a>
+                <a href="/account/history/">Historial</a>
+                <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
+                <a href="https://instagram.com/santbeq">Personal Instagram</a>
+                <a href="mailto:eilishtvmanagement@gmail.com">Help</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
 
     <!-- CONTENT -->
     <main>

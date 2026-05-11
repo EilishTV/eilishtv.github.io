@@ -213,14 +213,27 @@ fetch(url)
     document.addEventListener("keydown", resetHideTimer);
     resetHideTimer();
 
-    /* ---------- CLICK VIDEO PARA FULLSCREEN ---------- */
-    videoContainer.addEventListener("click", () => {
-      if (!currentIframe) return;
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) elem.requestFullscreen().catch(()=>{});
-      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-      else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-    });
+    /* ---------- FULLSCREEN MOBILE + DESKTOP ---------- */
+
+function openFullscreen() {
+  if (!currentIframe) return;
+
+  const elem = videoContainer;
+
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen().catch(() => {});
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    elem.msRequestFullscreen();
+  }
+}
+
+/* Desktop */
+videoContainer.addEventListener("click", openFullscreen);
+
+/* Mobile */
+videoContainer.addEventListener("touchstart", openFullscreen);
   </script>
 
 </body>
