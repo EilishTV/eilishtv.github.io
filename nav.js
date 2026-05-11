@@ -1,9 +1,8 @@
 // =======================================
-// RENDER NAV
+// NAV RENDER
 // =======================================
 
-const navContainer =
-    document.getElementById("mainNav");
+const navContainer = document.getElementById("mainNav");
 
 if (navContainer) {
 
@@ -12,25 +11,18 @@ if (navContainer) {
     <nav>
 
         <a class="navLogo" href="/index.html">
-            <img
-                src="/images/extras/logo.png"
-                alt="logo"
-            >
+            <img src="/images/extras/logo.png" alt="logo">
         </a>
 
-        <!-- MOBILE BUTTON -->
-        <button class="mobileMenuBtn">
-
-            <i class="fas fa-bars"></i>
-
-        </button>
-
-        <!-- MENU -->
         <div class="navMenu">
 
+            <!-- LINK NORMAL -->
             <a href="/browse/">
                 Inicio
             </a>
+
+            <!-- SOLO FLECHA ABRE MENU -->
+            <i class="fas fa-chevron-down menuToggle"></i>
 
             <a href="#">
                 Películas
@@ -46,12 +38,7 @@ if (navContainer) {
 
         </div>
 
-        <!-- SEARCH -->
-        <form
-            class="searchContainer"
-            action="/browse/search/"
-            method="GET"
-        >
+        <form class="searchContainer" action="/browse/search/" method="GET">
 
             <input
                 type="text"
@@ -60,81 +47,37 @@ if (navContainer) {
                 placeholder="Buscar..."
             >
 
-            <button
-                type="submit"
-                class="searchBtn"
-            >
+            <button type="submit" class="searchBtn">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
 
         </form>
 
-        <!-- USER -->
         <div class="userMenu">
 
-            <img
-                class="userImg"
-                src="/images/avatars/default.png"
-                alt="avatar"
-            >
+            <img class="userImg" src="/images/avatars/default.png" alt="avatar">
 
             <div class="dropDown">
 
-                <div
-                    class="profileHeader"
-                    id="openProfiles"
-                >
+                <div class="profileHeader" id="openProfiles">
 
-                    <img
-                        class="navAvatar"
-                        src="/images/avatars/default.png"
-                        alt="avatar"
-                    >
+                    <img class="navAvatar" src="/images/avatars/default.png" alt="avatar">
 
-                    <span id="navProfileName">
-                        User
-                    </span>
+                    <span id="navProfileName">User</span>
 
-                    <i
-                        class="fas fa-chevron-right"
-                        id="profileArrow"
-                    ></i>
+                    <i class="fas fa-chevron-right" id="profileArrow"></i>
 
                 </div>
 
-                <a href="/account/#profiles">
-                    Perfill
-                </a>
+                <a href="/account/#profiles">Perfil</a>
+                <a href="/account/">Cuenta</a>
+                <a href="/account/history/">Historial</a>
 
-                <a href="/account/">
-                    Cuenta
-                </a>
+                <a href="https://instagram.com/eilishtvwebsite">Instagram</a>
+                <a href="https://instagram.com/santbeq">Personal Instagram</a>
+                <a href="mailto:eilishtvmanagement@gmail.com">Help</a>
 
-                <a href="/account/history/">
-                    Historial
-                </a>
-
-                <a
-                    href="https://instagram.com/eilishtvwebsite"
-                    target="_blank"
-                >
-                    Instagram
-                </a>
-
-                <a
-                    href="https://instagram.com/santbeq"
-                    target="_blank"
-                >
-                    Personal Instagram
-                </a>
-
-                <a href="mailto:eilishtvmanagement@gmail.com">
-                    Help
-                </a>
-
-                <a href="#" id="logoutBtn">
-                    Cerrar sesión
-                </a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
 
             </div>
 
@@ -147,22 +90,45 @@ if (navContainer) {
 
 
 // =======================================
-// ELEMENTOS
+// MOBILE MENU (SOLO FLECHA - FIX REAL)
 // =======================================
 
-const userMenu =
-    document.querySelector(".userMenu");
+const navMenu = document.querySelector(".navMenu");
+const menuToggle = document.querySelector(".menuToggle");
 
-const dropDown =
-    document.querySelector(".dropDown");
+if (menuToggle && navMenu) {
 
-const profileArrow =
-    document.getElementById("profileArrow");
+    menuToggle.addEventListener("click", (e) => {
+
+        e.stopPropagation();
+
+        navMenu.classList.toggle("open");
+
+    });
+
+}
+
+// cerrar al click afuera
+document.addEventListener("click", (e) => {
+
+    if (
+        window.innerWidth <= 768 &&
+        navMenu &&
+        !navMenu.contains(e.target)
+    ) {
+        navMenu.classList.remove("open");
+    }
+
+});
 
 
 // =======================================
-// DROPDOWN
+// DROPDOWN USER
 // =======================================
+
+const userMenu = document.querySelector(".userMenu");
+const dropDown = document.querySelector(".dropDown");
+const profileArrow = document.getElementById("profileArrow");
 
 let closeTimer;
 
@@ -177,6 +143,7 @@ if (userMenu && dropDown) {
         if (profileArrow) {
             profileArrow.style.opacity = "1";
         }
+
     };
 
     const hideMenu = () => {
@@ -190,27 +157,14 @@ if (userMenu && dropDown) {
             }
 
         }, 120);
+
     };
 
-    userMenu.addEventListener(
-        "mouseenter",
-        showMenu
-    );
+    userMenu.addEventListener("mouseenter", showMenu);
+    userMenu.addEventListener("mouseleave", hideMenu);
 
-    userMenu.addEventListener(
-        "mouseleave",
-        hideMenu
-    );
-
-    dropDown.addEventListener(
-        "mouseenter",
-        showMenu
-    );
-
-    dropDown.addEventListener(
-        "mouseleave",
-        hideMenu
-    );
+    dropDown.addEventListener("mouseenter", showMenu);
+    dropDown.addEventListener("mouseleave", hideMenu);
 }
 
 
@@ -218,11 +172,8 @@ if (userMenu && dropDown) {
 // SEARCH
 // =======================================
 
-const searchBtn =
-    document.querySelector(".searchBtn");
-
-const searchInput =
-    document.querySelector(".searchInput");
+const searchBtn = document.querySelector(".searchBtn");
+const searchInput = document.querySelector(".searchInput");
 
 if (searchBtn && searchInput) {
 
@@ -230,9 +181,7 @@ if (searchBtn && searchInput) {
 
         searchInput.classList.toggle("show");
 
-        if (
-            searchInput.classList.contains("show")
-        ) {
+        if (searchInput.classList.contains("show")) {
             searchInput.focus();
         }
 
@@ -242,36 +191,27 @@ if (searchBtn && searchInput) {
 
 
 // =======================================
-// FIREBASE NAV
+// FIREBASE NAV SYNC (LOCALSTORAGE)
 // =======================================
 
 function applyNavData() {
 
-    const navName =
-        document.getElementById("navProfileName");
+    const navName = document.getElementById("navProfileName");
+    const navAvatar = document.querySelector(".navAvatar");
+    const userImg = document.querySelector(".userImg");
 
-    const navAvatar =
-        document.querySelector(".navAvatar");
-
-    const userImg =
-        document.querySelector(".userImg");
-
-    const storedName =
-        localStorage.getItem("navProfileName");
-
-    const storedAvatar =
-        localStorage.getItem("navProfileAvatar");
+    const storedName = localStorage.getItem("navProfileName");
+    const storedAvatar = localStorage.getItem("navProfileAvatar");
 
     if (navName && storedName) {
         navName.textContent = storedName;
     }
 
-    if (navAvatar && storedAvatar) {
-        navAvatar.src = storedAvatar;
-    }
+    if (storedAvatar) {
 
-    if (userImg && storedAvatar) {
-        userImg.src = storedAvatar;
+        if (navAvatar) navAvatar.src = storedAvatar;
+        if (userImg) userImg.src = storedAvatar;
+
     }
 
 }
@@ -280,28 +220,22 @@ applyNavData();
 
 
 // =======================================
-// AUTH LISTENER
+// FIREBASE HOOK (GLOBAL SAFE)
 // =======================================
 
-const authWait = setInterval(() => {
+const waitAuth = setInterval(() => {
 
-    if (
-        window.auth &&
-        window.firebaseOnAuth
-    ) {
+    if (window.auth && window.firebaseOnAuth) {
 
-        clearInterval(authWait);
+        clearInterval(waitAuth);
 
-        window.firebaseOnAuth(
-            window.auth,
-            (user) => {
+        window.firebaseOnAuth(window.auth, (user) => {
 
-                if (!user) return;
+            if (!user) return;
 
-                applyNavData();
+            applyNavData();
 
-            }
-        );
+        });
 
     }
 
@@ -328,27 +262,20 @@ document.addEventListener("click", async (e) => {
 
 
 // =======================================
-// OVERLAY
+// OVERLAY PROFILES
 // =======================================
 
 document.addEventListener("click", (e) => {
 
-    if (
-        e.target.closest("#openProfiles")
-    ) {
+    if (e.target.closest("#openProfiles")) {
 
-        const overlay =
-            document.getElementById(
-                "profileOverlay"
-            );
+        const overlay = document.getElementById("profileOverlay");
 
         if (overlay) {
 
             overlay.style.display = "flex";
 
-            sessionStorage.removeItem(
-                "profileSelected"
-            );
+            sessionStorage.removeItem("profileSelected");
 
         }
 
