@@ -116,36 +116,42 @@ registerBtn?.addEventListener("click", async () => {
 
     try {
 
+        // =======================================
+        // EMAIL (VIENE DE TEXT, NO INPUT)
+        // =======================================
+
         const email =
-            document.getElementById("email")
-            ?.value
-            .trim();
+            document.getElementById("userEmail")
+                ?.textContent
+                .trim();
 
         const password =
             document.getElementById("password")
-            ?.value
-            .trim();
+                ?.value
+                .trim();
 
         const name =
             document.getElementById("userName")
-            ?.value
-            .trim();
+                ?.value
+                .trim();
+
+        // =======================================
+        // VALIDACIÓN
+        // =======================================
 
         if (!email || !password || !name) {
-
             showError("Please complete all fields.");
-
             return;
         }
 
         if (password.length < 6) {
-
-            showError(
-                "Password must contain at least 6 characters."
-            );
-
+            showError("Password must contain at least 6 characters.");
             return;
         }
+
+        // =======================================
+        // FIREBASE AUTH
+        // =======================================
 
         const cred =
             await createUserWithEmailAndPassword(
@@ -157,7 +163,7 @@ registerBtn?.addEventListener("click", async () => {
         const user = cred.user;
 
         // =======================================
-        // UPDATE FIREBASE PROFILE
+        // UPDATE PROFILE AUTH
         // =======================================
 
         await updateProfile(user, {
@@ -166,7 +172,7 @@ registerBtn?.addEventListener("click", async () => {
         });
 
         // =======================================
-        // VERIFY EMAIL
+        // EMAIL VERIFICATION
         // =======================================
 
         await sendEmailVerification(user);
@@ -178,28 +184,21 @@ registerBtn?.addEventListener("click", async () => {
         const profilesRef =
             collection(db, "users", user.uid, "profiles");
 
-        const profileDoc = doc(profilesRef);
+        const profileDoc =
+            doc(profilesRef);
 
         await setDoc(profileDoc, {
-
             name,
-
             avatar: "/images/avatars/default.png",
-
             main: true,
-
             createdAt: new Date()
-
         });
 
         // =======================================
-        // LOCAL STORAGE
+        // LOCAL STORAGE (NAV FIX INMEDIATO)
         // =======================================
 
-        localStorage.setItem(
-            "navProfileName",
-            name
-        );
+        localStorage.setItem("navProfileName", name);
 
         localStorage.setItem(
             "navProfileAvatar",
@@ -217,21 +216,14 @@ registerBtn?.addEventListener("click", async () => {
         console.error(err);
 
         if (err.code === "auth/email-already-in-use") {
-
-            showError(
-                "This email is already registered."
-            );
-
+            showError("This email is already registered.");
         } else {
-
             showError("Something went wrong.");
-
         }
 
     }
 
 });
-
 
 // =======================================
 // LOGIN
