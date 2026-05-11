@@ -65,7 +65,6 @@ function renderProfileList(snap, user, container) {
         const p = d.data();
         const isMain = p.main || index === 0;
 
-        // Sincronizar Nav principal con el perfil activo o main
         if (isMain && window.updateNavAvatars) {
             window.updateNavAvatars(p.avatar, p.name);
         }
@@ -118,11 +117,11 @@ function showProfileForm(user, profile = null) {
                         <select style="background: #000; color: #fff; border: 1px solid #333; padding: 5px 10px; width: 120px; border-radius: 2px;"><option>Español</option></select>
                     </div>
                 </div>
-                <!-- FILA DE BOTONES -->
+
                 <div style="display: flex; gap: 15px; align-items: center; width: 100%;">
                     <button id="saveBtn" style="background: #000; color: #fff; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; font-size: 12px;">SAVE</button>
                     <button id="cancelBtn" style="background: none; border: 1px solid #666; color: #666; padding: 10px 25px; font-weight: bold; cursor: pointer; font-size: 12px;">CANCEL</button>
-                    
+
                     ${(profile && !profile.main && currentProfilesCount > 1) ? `
                         <button id="delBtn" style="margin-left: auto; background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px 20px; font-weight: bold; cursor: pointer; font-size: 11px;">
                             <i class="fas fa-trash-alt"></i> DELETE
@@ -155,7 +154,7 @@ function showProfileForm(user, profile = null) {
             try {
                 if(profile) {
                     await updateDoc(doc(db, "users", user.uid, "profiles", profile.id), { name, avatar: selectedAvatar });
-                    // Sincronizar Nav si es el perfil actual
+
                     if (localStorage.getItem("navProfileName") === profile.name || profile.main) {
                         if (window.updateNavAvatars) window.updateNavAvatars(selectedAvatar, name);
                     }
@@ -164,7 +163,12 @@ function showProfileForm(user, profile = null) {
                         name, avatar: selectedAvatar, main: isFirstTime, createdAt: new Date() 
                     });
                 }
+
                 initProfilesUI(user);
+
+                // 🔥 SOLO AGREGADO
+                window.location.reload();
+
             } catch (err) { console.error(err); }
         };
     };
@@ -172,7 +176,6 @@ function showProfileForm(user, profile = null) {
     const showIconPicker = () => {
         subtitle.innerText = "Choose your Icon";
         container.innerHTML = `<div class="fade" style="color: white; padding-top: 10px;"><div id="categoriesList"></div><button id="backToForm" style="margin-top:20px; background:none; border:1px solid #444; color:#888; padding:8px 15px; cursor:pointer; font-size:12px; border-radius:2px;">BACK</button></div>`;
-
         Object.entries(ICON_CATEGORIES).forEach(([catName, icons]) => {
             const section = document.createElement("div");
             section.style = "margin-bottom: 25px;";
@@ -186,15 +189,16 @@ function showProfileForm(user, profile = null) {
 
         document.querySelectorAll(".icon-choice").forEach(img => {
             img.onclick = () => { selectedAvatar = img.src; renderForm(); };
-            img.onmouseenter = () => img.style.borderColor = "white";
-            img.onmouseleave = () => img.style.borderColor = "transparent";
         });
+
         document.getElementById("backToForm").onclick = () => renderForm();
     };
 
     renderForm();
 }
 
+// resto igual...
+window.initProfilesUI = initProfilesUI;
 // --- GESTIÓN DE SEGURIDAD (AUTH) ---
 
 window.showPasswordForm = () => {
