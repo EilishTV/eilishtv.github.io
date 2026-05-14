@@ -24,18 +24,19 @@ let isFirstTime = false;
 let currentProfilesCount = 0;
 
 const ICON_CATEGORIES = {
+    "Nuevos": [
+        "https://imglink.cc/cdn/avatar2.png",
+        "https://imglink.cc/cdn/avatar3.png",
+        "https://imglink.cc/cdn/avatar4.png",
+        "https://imglink.cc/cdn/avatar1.png"
+    ],
     "Billie Eilish": [
         "https://i.pinimg.com/474x/82/58/b5/8258b53d480c981f85f0fab2093d6d41.jpg",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKyC6wyShsE7OZz51b4_yK9x2LPGtqxA-HMw&s",
         "https://preview.redd.it/new-photos-of-billie-on-instagram-v0-w5fq259pj6mf1.jpg?width=640&crop=smart&auto=webp&s=cc298e3079f8d460f8e3c52a071d9416c1f1b301",
         "https://s.yimg.com/ny/api/res/1.2/a4gWz..va9mAds8uWjqEXA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTkyNTtjZj13ZWJw/https://media.zenfs.com/en/globe_458/dec12660f4393aa8f306a382b39fc52e"
     ],
-    "The Party": [
-        "https://imglink.cc/cdn/avatar2.png",
-        "https://imglink.cc/cdn/avatar3.png",
-        "https://imglink.cc/cdn/avatar4.png",
-        "https://imglink.cc/cdn/avatar1.png"
-    ]
+
 };
 
 // --- GESTIÓN DE PERFILES (FIRESTORE) ---
