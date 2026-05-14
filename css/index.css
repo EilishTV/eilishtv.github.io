@@ -138,6 +138,10 @@ a {
 /* ============================================================
    3. NAVEGACIÓN (NAV COMPLETO)
    ============================================================ */
+/* ============================================================
+   NAV BASE
+   ============================================================ */
+
 nav {
     position: fixed;
     top: 0;
@@ -151,9 +155,10 @@ nav {
     z-index: 10;
 }
 
+/* ================= LOGO ================= */
+
 .navLogo {
     width: 100px;
-    margin-top: 0px;
     font-size: 0;
     display: inline-block;
 }
@@ -162,6 +167,8 @@ nav {
     display: block;
     width: 70%;
 }
+
+/* ================= MENU ================= */
 
 .navMenu {
     display: flex;
@@ -175,17 +182,19 @@ nav {
     display: flex;
     align-items: center;
     padding: 0 12px;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
+/* underline opcional */
 .navMenu a span {
     font-size: 13px;
     letter-spacing: 1.42px;
     padding: 2px 0;
     position: relative;
-    white-space: nowrap;
 }
 
-/* Línea animada debajo de los links del menú */
 .navMenu a span::before {
     background-color: rgb(249, 249, 249);
     border-radius: 0 0 4px 4px;
@@ -196,19 +205,33 @@ nav {
     opacity: 0;
     position: absolute;
     right: 0;
-    transform-origin: left center;
     transform: scaleX(0);
+    transform-origin: left center;
     transition: all 250ms ease;
     visibility: hidden;
 }
 
 .navMenu a:hover span::before {
     transform: scaleX(1);
-    visibility: visible;
     opacity: 1;
+    visibility: visible;
 }
 
-/* --- SECCIÓN BUSCADOR --- */
+/* ================= FLECHA (FIX DEFINITIVO) ================= */
+
+/* 🔴 OCULTO EN PC (FORZADO) */
+.menuToggle {
+    display: none !important;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 6px;
+    color: #f9f9f9;
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+
 .searchContainer {
     position: relative;
     display: flex;
@@ -226,7 +249,6 @@ nav {
     align-items: center;
     justify-content: center;
     padding: 6px;
-    z-index: 10;
 }
 
 .searchInput {
@@ -244,11 +266,6 @@ nav {
     outline: none;
     opacity: 0;
     transition: width 0.3s ease, opacity 0.3s ease;
-    z-index: 5;
-}
-
-.searchInput::placeholder {
-    color: #ccc;
 }
 
 .searchContainer:hover .searchInput,
@@ -257,7 +274,10 @@ nav {
     opacity: 1;
 }
 
-/* --- MENÚ DE USUARIO (Dropdown) --- */
+/* ============================================================
+   USER MENU
+   ============================================================ */
+
 .userMenu {
     position: relative;
     height: 40px;
@@ -269,9 +289,8 @@ nav {
     width: 100%;
     height: 100%;
     border-radius: 4px;
+    object-fit: cover;
 }
-
-
 
 #profileArrow {
     margin-left: 68px;
@@ -280,6 +299,7 @@ nav {
     transition: opacity .2s ease;
 }
 
+/* dropdown */
 .dropDown {
     position: absolute;
     right: 0;
@@ -322,95 +342,82 @@ nav {
     font-size: 14px;
     letter-spacing: 0.5px;
     color: white;
+    text-decoration: none;
 }
 
 .dropDown a:hover {
     text-decoration: underline;
 }
+
 /* ============================================================
-   NAV MOBILE FIX (ESTABLE + SIN BUGS HOVER/SAFARI)
+   MOBILE FIX
    ============================================================ */
+
 @media (max-width: 768px) {
 
     nav {
         height: 80px;
-        padding: 0 20px;
-        display: flex;
-        align-items: center;
-        background-color: #090b13;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
+        padding: 0 16px;
         z-index: 1000;
     }
 
-    /* ================= LOGO ================= */
+    /* LOGO */
     .navLogo {
         width: 70px;
-        flex-shrink: 0;
     }
 
     .navLogo img {
         width: 100%;
-        object-fit: contain;
     }
 
-    /* ================= MENU ================= */
+    /* MENU BASE */
     .navMenu {
         position: relative;
         display: flex;
         align-items: center;
-        margin-left: 25px;
+        margin-left: 10px;
         margin-right: auto;
         height: 80px;
+        gap: 0;
     }
 
-    .navMenu a:first-child {
-        display: flex;
+    /* 🔵 FLECHA SOLO MOBILE */
+    .menuToggle {
+        display: inline-flex !important;
         align-items: center;
+        justify-content: center;
+        cursor: pointer;
         font-size: 14px;
+        margin-left: 6px;
         color: #f9f9f9;
-        padding: 0;
-        white-space: nowrap;
     }
 
-    /* ❌ IMPORTANTE: quitar hover fake en móvil */
-    .navMenu::after {
-        content: "";
-        display: none;
-    }
-
-    /* ================= DROPDOWN MOBILE (FIX REAL) ================= */
-
+    /* LINKS OCULTOS */
     .navMenu a:not(:first-child) {
         position: absolute;
         left: 0;
         width: 170px;
         background-color: #13151d;
         color: #f9f9f9;
-        padding: 14px 18px;
-        text-decoration: none;
+        padding: 14px 16px;
         border-left: 1px solid #333;
         border-right: 1px solid #333;
         z-index: 100;
 
-        /* estado oculto */
         opacity: 0;
         visibility: hidden;
         transform: translateY(-8px);
-
         transition: 0.25s ease;
     }
 
-    /* 👇 SOLO JS va a controlar esto (NO hover) */
+    /* OPEN STATE */
     .navMenu.open a:not(:first-child) {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
     }
 
-    /* posiciones */
+    /* POSICIONES */
     .navMenu a:nth-child(2) {
         top: 62px;
         border-top: 1px solid #444;
@@ -418,6 +425,7 @@ nav {
     }
 
     .navMenu a:nth-child(3) { top: 108px; }
+
     .navMenu a:nth-child(4) { top: 154px; }
 
     .navMenu a:nth-child(5) {
@@ -430,25 +438,19 @@ nav {
         background-color: #1f232e;
     }
 
-    /* ================= SEARCH ================= */
+    /* SEARCH MOBILE */
     .searchContainer:hover .searchInput {
         width: 85px;
     }
 
-    /* ================= USER ================= */
+    /* USER MOBILE */
     .userMenu {
         width: 38px;
         height: 38px;
-        flex-shrink: 0;
-    }
-
-    .userImg {
-        width: 100%;
-        height: 100%;
-        border-radius: 4px;
-        object-fit: cover;
     }
 }
+
+
 /* ============================================================
    4. ESTRUCTURA PRINCIPAL (MAIN Y SLIDER)
    ============================================================ */
@@ -650,51 +652,110 @@ main::after {
     display: block;
 }
 
-.cardInfo {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,.5), transparent);
-    padding: 10px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity .25s ease, transform .25s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+/* =========================
+   TOP 10
+========================= */
+
+.top10Row{
+    gap:34px !important;
 }
 
-.recWrap:hover .cardInfo {
-    opacity: 1;
-    transform: translateY(0);
+.top10Item{
+    position:relative;
+
+    min-width:340px;
+    height:190px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+
+    cursor:pointer;
 }
 
-.cardButtons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 6px;
+.topRank{
+    position:absolute;
+
+    left:0;
+    top:12px;
+
+    z-index:1;
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:200px;
+    line-height:.8;
+
+    height:190px;
+
+    display:flex;
+    align-items:center;
+
+    color:#000;
+
+    user-select:none;
+
+    letter-spacing:-8px;
+
+    -webkit-text-stroke: 3px #5B5B5B;
+
+    text-shadow:
+    0 0 20px rgba(255,255,255,.05);
 }
 
-.playBtn {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: white; color: black;
-    display: flex; align-items: center; justify-content: center;
+.topRank.double{
+    letter-spacing:-15px;
+    left:-50px;
 }
 
-.listBtn {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+.top10Item.ten{
+    margin-left:45px;
 }
 
-.cardDuration {
-    font-size: 12px;
-    color: #ccc;
+.topCard{
+    width:280px;
+    aspect-ratio:16/9;
+
+    margin-left:58px;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    position:relative;
+    z-index:2;
+
+    border:3px solid rgba(255,255,255,.08);
+
+    background:#111;
+
+    transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.35);
 }
+
+.top10Item:hover .topCard{
+    transform:scale(1.05);
+
+    border-color:
+    rgba(255,255,255,.5);
+
+    box-shadow:
+    0 18px 45px rgba(0,0,0,.5);
+}
+
+.topCard img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
 
 /* Botones circulares */
 .playBtn, .listBtn {
