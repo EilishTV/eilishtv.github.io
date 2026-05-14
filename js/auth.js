@@ -13,7 +13,8 @@ import {
     signOut,
     setPersistence,
     browserLocalPersistence,
-    sendEmailVerification
+    sendEmailVerification,
+    signInAnonymously
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
@@ -208,6 +209,10 @@ registerBtn?.addEventListener("click", async () => {
         // =======================================
         // REDIRECT
         // =======================================
+        sessionStorage.setItem(
+    "needsVerify",
+    "true"
+);
 
         window.location.href = "/identify/verify/";
 
@@ -224,6 +229,59 @@ registerBtn?.addEventListener("click", async () => {
     }
 
 });
+
+
+// =======================================
+// GUEST LOGIN
+// =======================================
+
+const guestBtn =
+    document.getElementById("guestBtn");
+
+guestBtn?.addEventListener("click", async () => {
+
+    clearError();
+
+    try {
+
+        const cred =
+            await signInAnonymously(auth);
+
+        const user =
+            cred.user;
+
+        console.log(
+            "[GUEST LOGIN]",
+            user
+        );
+
+        localStorage.setItem(
+            "navProfileName",
+            "Guest"
+        );
+
+        localStorage.setItem(
+            "navProfileAvatar",
+            "/images/avatars/default.png"
+        );
+
+        window.location.href =
+            "/browse/";
+
+    } catch (err) {
+
+        console.error(
+            "[GUEST LOGIN ERROR]",
+            err
+        );
+
+        showError(
+            "Guest login failed."
+        );
+    }
+
+});
+
 
 // =======================================
 // LOGIN
@@ -365,20 +423,27 @@ onAuthStateChanged(auth, async (user) => {
     // EMAIL NOT VERIFIED
     // =======================================
 
-    if (
-        !user.emailVerified &&
-        !path.includes("verify")
-    ) {
+const needsVerify =
+    sessionStorage.getItem(
+        "needsVerify"
+    );
 
-        console.log(
-            "[AUTH] email not verified"
-        );
+if (
+    !user.emailVerified &&
+    !user.isAnonymous &&
+    !path.includes("verify") &&
+    needsVerify === "true"
+) {
 
-        window.location.href =
-            "/identify/verify/";
+    console.log(
+        "[AUTH] email not verified"
+    );
 
-        return;
-    }
+    window.location.href =
+        "/identify/verify/";
+
+    return;
+}
 
     try {
 
@@ -399,7 +464,7 @@ onAuthStateChanged(auth, async (user) => {
             "navProfileName",
             profile?.name ||
             user.displayName ||
-            "User"
+            "Guest"
         );
 
         localStorage.setItem(

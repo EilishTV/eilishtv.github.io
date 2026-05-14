@@ -36,6 +36,12 @@
 
     <p id="status" class="verifyStatus"></p>
 
+    <button
+        id="goBack"
+        class="verifyBackBtn">
+        Volver atrás
+    </button>
+
 </div>
 
 </body>
@@ -115,6 +121,16 @@ document.getElementById("resend").onclick = async () => {
         console.error(err);
         status.innerText = "Error al reenviar el correo.";
     }
+
+
+
+};
+
+    document.getElementById(
+    "goBack"
+).onclick = () => {
+
+    window.history.back();
 
 };
 
