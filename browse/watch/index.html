@@ -299,10 +299,52 @@ button i{
   }
 }
 
+/* ========================= */
+/* GLOBAL LOADER */
+/* ========================= */
+.loader-container {
+  position: fixed;
+  inset: 0;
+  background: #000; /* Fondo negro puro */
+  z-index: 9999;    /* Por encima de todo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Clase para ocultarlo de forma fluida */
+.loader-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Animación del círculo de carga */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #fff; /* Color blanco interactivo */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 </style>
 </head>
 
 <body>
+
+  <!-- PANTALLA DE CARGA GLOBAL -->
+<div id="globalLoader" class="loader-container">
+  <div class="spinner"></div>
+</div>
 
 <nav>
 
@@ -421,6 +463,17 @@ import {
 
 import { auth } from "../../js/auth.js";
 
+// ===============================================
+// LOADER UTILS
+// ===============================================
+const globalLoader = document.getElementById("globalLoader");
+
+function hideLoader() {
+  if (globalLoader) {
+    globalLoader.classList.add("hidden");
+  }
+}
+
 const params = new URLSearchParams(window.location.search);
 
 const id = params.get("id");
@@ -450,7 +503,10 @@ Promise.all([
       x => String(x.id).trim() === String(id).trim()
     );
 
-  if (!itemBase) return;
+  if (!itemBase) {
+    hideLoader(); // Si no se encuentra el ítem, remueve el loader para no romper la UX
+    return;
+  }
 
   /* HERO BG */
 
@@ -483,8 +539,8 @@ Promise.all([
 
   /* CONTENT */
 
-  document.getElementById("logo").src =
-    itemBase.logo || "";
+  const logoImg = document.getElementById("logo");
+  logoImg.src = itemBase.logo || "";
 
   document.getElementById("year").textContent =
     itemBase.year || "";
@@ -515,8 +571,16 @@ Promise.all([
       });
   }
 
+  // Esperar a que la imagen del logo cargue de verdad antes de quitar la pantalla de carga
+  if (logoImg.src) {
+    logoImg.addEventListener("load", hideLoader);
+    logoImg.addEventListener("error", hideLoader); // Por si la URL de la imagen llega a fallar
+  } else {
+    hideLoader();
+  }
+
   /* =========================
-     WATCH HISTORY
+      WATCH HISTORY
   ========================= */
 
   const saveToHistory =
@@ -594,7 +658,7 @@ Promise.all([
   };
 
   /* =========================
-     MI LISTA
+      MI LISTA
   ========================= */
 
   const listBtn =
@@ -711,18 +775,21 @@ Promise.all([
             );
           }
       };
-  });
+    });
 
 })
 
-.catch(err =>
+.catch(err => {
   console.error(
     "Error cargando datos:",
     err
-  )
-);
+  );
+  hideLoader(); // Remueve el loader en caso de error de red crítico
+});
 
 </script>
+
+
 
 <footer class="footer"></footer>
 
