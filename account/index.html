@@ -260,9 +260,6 @@
             <i class="fas fa-home"></i> Overview
         </div>
 
-        <div class="menu-item" onclick="navigate('levels')">
-            <i class="fas fa-star"></i> Niveles
-        </div>
 
         <div class="menu-item" onclick="navigate('membership')">
             <i class="fas fa-credit-card"></i> Membership
@@ -406,57 +403,6 @@
                             Eliminar cuenta
                         </button>
                     </div>
-                </div>
-            `,
-
-            levels: `
-                <div class="fade">
-
-                    <h1>Niveles</h1>
-
-                    <div class="subtitle">
-                        Tu rango basado en la actividad
-                    </div>
-
-                    <div class="card level-card">
-
-                        <div class="gauge-container">
-
-                            <svg class="gauge-svg" viewBox="0 0 200 120">
-
-                                <path class="gauge-bg"
-                                d="M 30 100 A 70 70 0 0 1 170 100" />
-
-                                <path id="gaugeProgress"
-                                class="gauge-progress"
-                                d="M 30 100 A 70 70 0 0 1 170 100" />
-
-                            </svg>
-
-                            <div class="gauge-content">
-                                <i class="fas fa-star" id="starIcon"></i>
-
-                                <span id="rankTitle" class="rank-name">
-                                    ---
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <div class="hours-badge">
-                            <span id="hoursVal">0</span>
-                            horas reproducidas
-                        </div>
-
-                        <p id="nextRankMsg"
-                        style="font-size:12px;color:#999;margin-top:10px;"></p>
-
-                    </div>
-
-                    <div class="subtitle">Tus Beneficios</div>
-
-                    <div id="rewardsContainer"></div>
-
                 </div>
             `,
 
