@@ -24,19 +24,27 @@ let isFirstTime = false;
 let currentProfilesCount = 0;
 
 const ICON_CATEGORIES = {
-    "Nuevos": [
-        "https://imglink.cc/cdn/avatar2.png",
-        "https://imglink.cc/cdn/avatar3.png",
-        "https://imglink.cc/cdn/avatar4.png",
-        "https://imglink.cc/cdn/avatar1.png"
-    ],
     "Billie Eilish": [
+        "https://i.pinimg.com/736x/4d/f1/0f/4df10ff74cdd7e45df822e2ff4f7344f.jpg",
+        "https://i.pinimg.com/1200x/f9/1f/65/f91f65cbb59621bf297e44380e34a953.jpg",
+        "https://i.pinimg.com/736x/dd/dd/13/dddd1325647878456f885e34cd494f7b.jpg",
+        "https://i.pinimg.com/736x/96/79/b6/9679b6fa9f316e871c65a42fa0d66d0c.jpg",
         "https://i.pinimg.com/474x/82/58/b5/8258b53d480c981f85f0fab2093d6d41.jpg",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKyC6wyShsE7OZz51b4_yK9x2LPGtqxA-HMw&s",
         "https://preview.redd.it/new-photos-of-billie-on-instagram-v0-w5fq259pj6mf1.jpg?width=640&crop=smart&auto=webp&s=cc298e3079f8d460f8e3c52a071d9416c1f1b301",
         "https://s.yimg.com/ny/api/res/1.2/a4gWz..va9mAds8uWjqEXA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTkyNTtjZj13ZWJw/https://media.zenfs.com/en/globe_458/dec12660f4393aa8f306a382b39fc52e"
     ],
-
+        "HIT ME HARD AND SOFT: THE TOUR": [
+        "https://i.pinimg.com/736x/1f/b5/2a/1fb52a9c26d77b1c6b3882a5419178e2.jpg",
+        "https://i.pinimg.com/736x/06/a8/e1/06a8e1caaeefb0657038fd9b8f0c5b7e.jpg",
+        "https://i.pinimg.com/736x/5f/8e/73/5f8e730b815952a7b404faefb2a252e8.jpg",
+        "https://i.pinimg.com/736x/03/3a/3a/033a3a06284215100a653f1ed370e597.jpg",
+    ],
+    "Sudamerica Tour 2023": [
+        "https://i.pinimg.com/736x/9a/c1/99/9ac1995b1621d6d10246760f70840527.jpg",
+        "https://i.pinimg.com/736x/f1/a7/3e/f1a73e47ef00ba49b7ca37c261a5c974.jpg",
+        "https://i.pinimg.com/736x/0b/e8/49/0be84979046d08ee35898de5f7fc6e6b.jpg"
+    ]
 };
 
 // --- GESTIÓN DE PERFILES (FIRESTORE) ---

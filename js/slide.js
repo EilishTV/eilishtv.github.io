@@ -5,7 +5,7 @@ const data = {
     logo: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Billie_Eilish_-_Hit_Me_Hard_and_Soft_-_The_Tour_In_3D_logo.png",
     descripcion: "Una experiencia visual inmersiva que transforma el álbum en un viaje intenso y envolvente",
     poster: "https://www.seattlemusicnews.com/wp-content/uploads/2024/12/billie-eilish-seattle-climate-pledge-arena-by-henry-hwu-1.jpg",
-    video: "../images/extras/BILLIE EILISH - HIT ME HARD AND SOFT_ THE TOUR (LIVE IN 3D) _ Official Trailer.mp4",
+    video: "../images/extras/BILLIE EILISH – HIT ME HARD AND SOFT_ THE TOUR (LIVE IN 3D) _ Official Trailer 2 (2026 Movie) (2).mp4",
     botones: ["Ver más", "Recordarme"]
 };
 
