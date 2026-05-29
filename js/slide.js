@@ -1,13 +1,43 @@
 const container = document.getElementById("proximamente");
 
 // ================== CONFIG ==================
-const data = {
-    logo: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Billie_Eilish_-_Hit_Me_Hard_and_Soft_-_The_Tour_In_3D_logo.png",
-    descripcion: "Una experiencia visual inmersiva que transforma el álbum en un viaje intenso y envolvente",
-    poster: "https://www.seattlemusicnews.com/wp-content/uploads/2024/12/billie-eilish-seattle-climate-pledge-arena-by-henry-hwu-1.jpg",
-    video: "../images/extras/BILLIE EILISH – HIT ME HARD AND SOFT_ THE TOUR (LIVE IN 3D) _ Official Trailer 2 (2026 Movie) (2).mp4",
-    botones: ["Ver más", "Recordarme"]
-};
+const banners = [
+        {   badge: "Disponible Mañana",
+        logo: "https://m.media-amazon.com/images/S/pv-target-images/376607ff1bb4ae48c0d92498c28ff45664a40070f09baa619d1f53abb8128e2e.png",
+        descripcion: "Otra descripción increíble para el segundo banner de la lista.",
+        poster: "https://www.rollingstone.com/wp-content/uploads/2023/02/swarm.jpg?w=1296&h=730&crop=1",
+        video: "VIDEO_2.mp4",
+        botones: ["Ver más", "Recordarme"],
+        url: "/browse/watch/index.html?id=0048"
+    },
+    
+    {   badge: "Próximamente",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Billie_Eilish_-_Hit_Me_Hard_and_Soft_-_The_Tour_In_3D_logo.png",
+        descripcion: "Una experiencia visual inmersiva que transforma el álbum en un viaje intenso y envolvente",
+        poster: "https://www.seattlemusicnews.com/wp-content/uploads/2024/12/billie-eilish-seattle-climate-pledge-arena-by-henry-hwu-1.jpg",
+        video: "../images/extras/BILLIE EILISH – HIT ME HARD AND SOFT_ THE TOUR (LIVE IN 3D) _ Official Trailer 2 (2026 Movie) (2).mp4",
+        botones: ["Ver más", "Recordarme"],
+        url: "/browse/watch/index.html?id=0047"
+    },
+
+    {   badge: "Próximamente",
+        logo: "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/34b3fc4c-f94c-4c33-9d4d-1bfbb1862140/compose?format=webp&width=1600",
+        descripcion: "Otra descripción increíble para el segundo banner de la lista.",
+        poster: "https://i.ytimg.com/vi/tRAnZjrzORE/maxresdefault.jpg",
+        video: "VIDEO_2.mp4",
+        botones: ["Ver más", "Recordarme"],
+        url: "/browse/watch/index.html?id=0048"
+    }    
+];
+
+// Estado global del componente
+let currentIndex = 0;
+let sonidoActivo = true;
+let videoListo = false;
+let minimoTiempoCumplido = false;
+let esperaScrollTimeout = null;
+let bannerVisible = true;
+let loopTimeout = null;
 
 // ================== ESTILOS CONTENEDOR ==================
 container.style.position = "relative";
@@ -19,16 +49,16 @@ container.style.overflow = "hidden";
 container.style.fontFamily = "Arial, sans-serif";
 container.style.color = "white";
 
-// ================== MEDIA ==================
+// ================== CREACIÓN DE ELEMENTOS (DOM) ==================
+
+// Contenedor de Media (Fondo)
 const mediaContainer = document.createElement("div");
 mediaContainer.style.position = "absolute";
 mediaContainer.style.inset = "0";
 mediaContainer.style.zIndex = "0";
 container.appendChild(mediaContainer);
 
-// Poster
 const poster = document.createElement("img");
-poster.src = data.poster;
 poster.style.width = "100%";
 poster.style.height = "100%";
 poster.style.objectFit = "cover";
@@ -38,9 +68,7 @@ poster.style.inset = "0";
 poster.style.transition = "opacity 0.8s ease";
 mediaContainer.appendChild(poster);
 
-// Video
 const video = document.createElement("video");
-video.src = data.video;
 video.style.width = "100%";
 video.style.height = "100%";
 video.style.objectFit = "cover";
@@ -50,18 +78,52 @@ video.style.inset = "0";
 video.style.opacity = "0";
 video.style.transition = "opacity 0.8s ease";
 video.autoplay = false;
-video.muted = true;
+video.muted = !sonidoActivo;
 video.playsInline = true;
 video.preload = "metadata";
 mediaContainer.appendChild(video);
 
-// ... (mantenemos el inicio del código igual)
+// Overlay
+const overlay = document.createElement("div");
+overlay.style.position = "absolute";
+overlay.style.inset = "0";
+overlay.style.zIndex = "1";
+container.appendChild(overlay);
 
-// ================== BOTÓN VOLUMEN ==================
+// Contenido info
+const content = document.createElement("div");
+content.style.position = "relative";
+content.style.zIndex = "2";
+content.style.maxWidth = "600px";
+container.appendChild(content);
+
+// Badge dinámico (se llena en cargarBanner)
+const badge = document.createElement("div");
+badge.style.position = "absolute";
+badge.style.padding = "6px 14px";
+badge.style.background = "#0a102a";
+badge.style.borderRadius = "20px";
+badge.style.fontSize = "14px";
+badge.style.fontWeight = "bold";
+badge.style.zIndex = "3";
+container.appendChild(badge);
+
+const logo = document.createElement("img");
+logo.style.transition = "transform 0.6s ease";
+logo.style.transformOrigin = "left top";
+content.appendChild(logo);
+
+const desc = document.createElement("p");
+desc.style.lineHeight = "1.5";
+content.appendChild(desc);
+
+const btnContainer = document.createElement("div");
+btnContainer.style.display = "flex";
+content.appendChild(btnContainer);
+
+// Botón Volumen
 const volumeBtn = document.createElement("i");
-// Iniciamos con el icono de volumen activo
-volumeBtn.className = "fas fa-volume-up"; 
-
+volumeBtn.className = sonidoActivo ? "fas fa-volume-up" : "fas fa-volume-mute"; 
 volumeBtn.style.position = "absolute";
 volumeBtn.style.right = "25px";
 volumeBtn.style.bottom = "25px";
@@ -69,24 +131,171 @@ volumeBtn.style.fontSize = "22px";
 volumeBtn.style.color = "white";
 volumeBtn.style.cursor = "pointer";
 volumeBtn.style.zIndex = "3";
-volumeBtn.style.opacity = "0"; // Se muestra al hacer hover
+volumeBtn.style.opacity = "0"; 
 volumeBtn.style.transition = "opacity 0.3s ease";
-
 container.appendChild(volumeBtn);
 
-// CAMBIO CLAVE: Iniciamos el estado en true y el video desmuteado
-let sonidoActivo = true;
-video.muted = false; 
+// ================== INDICADORES (PUNTOS ABAJO) ==================
+const indicatorsContainer = document.createElement("div");
+indicatorsContainer.style.position = "absolute";
+indicatorsContainer.style.bottom = "25px";
+indicatorsContainer.style.left = "50%";
+indicatorsContainer.style.transform = "translateX(-50%)";
+indicatorsContainer.style.display = "flex";
+indicatorsContainer.style.gap = "8px";
+indicatorsContainer.style.zIndex = "3";
+container.appendChild(indicatorsContainer);
 
-container.addEventListener("mouseenter", () => {
-    volumeBtn.style.opacity = "1";
+// Renderizar los puntitos dinámicamente
+banners.forEach((_, index) => {
+    const dot = document.createElement("div");
+    dot.style.width = "10px";
+    dot.style.height = "10px";
+    dot.style.borderRadius = "50%";
+    dot.style.background = "rgba(255, 255, 255, 0.4)";
+    dot.style.cursor = "pointer";
+    dot.style.transition = "background 0.3s, transform 0.3s";
+    
+    dot.addEventListener("click", (e) => {
+        e.stopPropagation();
+        cambiarBanner(index);
+    });
+    indicatorsContainer.appendChild(dot);
 });
 
-container.addEventListener("mouseleave", () => {
-    volumeBtn.style.opacity = "0";
+function actualizarIndicadores() {
+    Array.from(indicatorsContainer.children).forEach((dot, index) => {
+        if (index === currentIndex) {
+            dot.style.background = "white";
+            dot.style.transform = "scale(1.2)";
+        } else {
+            dot.style.background = "rgba(255, 255, 255, 0.4)";
+            dot.style.transform = "scale(1)";
+        }
+    });
+}
+
+// ================== LÓGICA DE CARGA DE DATOS ==================
+function cargarBanner(index) {
+    const data = banners[index];
+    if (!data) return;
+
+    // Resetear estados de video para el nuevo elemento
+    videoListo = false;
+    minimoTiempoCumplido = false;
+    
+    // Detener video actual y cambiar src
+    video.pause();
+    video.style.opacity = "0";
+    poster.style.opacity = "1";
+    logo.style.transform = "scale(1) translateY(0px)";
+
+    // Asignar nuevas URLs y Textos dinámicos
+    badge.textContent = data.badge || "Próximamente"; // <-- Texto del badge dinámico
+    poster.src = data.poster;
+    video.src = data.video;
+    video.load(); 
+    
+    logo.src = data.logo;
+    desc.textContent = data.descripcion;
+
+    // Limpiar y recrear botones
+    btnContainer.innerHTML = "";
+    data.botones.forEach(texto => {
+        const btn = document.createElement("button");
+        btn.textContent = texto;
+        btn.style.padding = "12px 28px";
+        btn.style.borderRadius = "30px";
+        btn.style.border = "none";
+        btn.style.cursor = "pointer";
+        btn.style.fontSize = "16px";
+        btn.style.fontWeight = "bold";
+        btn.style.transition = "0.3s";
+
+        if (texto === "Ver más") {
+            btn.style.background = "white";
+            btn.style.color = "black";
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                window.location.href = data.url;
+            });
+        } else {
+            btn.style.background = "rgba(255,255,255,0.2)";
+            btn.style.color = "white";
+            btn.style.border = "1px solid white";
+        }
+
+        btn.onmouseenter = () => btn.style.transform = "scale(1.05)";
+        btn.onmouseleave = () => btn.style.transform = "scale(1)";
+        btnContainer.appendChild(btn);
+    });
+
+    actualizarIndicadores();
+    aplicarResponsive(); // Asegura estilos correctos tras re-inyectar contenido
+
+    // Iniciar temporizador de espera inicial (3 segundos para reproducir)
+    if (loopTimeout) clearTimeout(loopTimeout);
+    loopTimeout = setTimeout(() => {
+        minimoTiempoCumplido = true;
+        intentarReproducir();
+    }, 3000);
+}
+
+function cambiarBanner(nuevoIndex) {
+    currentIndex = nuevoIndex;
+    cargarBanner(currentIndex);
+}
+
+function siguienteBanner() {
+    currentIndex = (currentIndex + 1) % banners.length;
+    cambiarBanner(currentIndex);
+}
+
+// ================== LÓGICA REPRODUCCIÓN REFORZADA ==================
+function intentarReproducir() {
+    if (videoListo && minimoTiempoCumplido && bannerVisible) {
+        video.muted = !sonidoActivo; 
+        
+        video.play().catch(error => {
+            console.log("Autoplay con sonido bloqueado por navegador, reproduciendo muteado.");
+            video.muted = true;
+            sonidoActivo = false;
+            volumeBtn.className = "fas fa-volume-mute";
+            video.play().catch(err => console.log("Error crítico al reproducir video:", err));
+        });
+
+        video.style.opacity = "1";
+        poster.style.opacity = "0";
+        
+        if (window.innerWidth >= 1024) {
+            logo.style.transform = "scale(0.65) translateY(120px)";
+        }
+    }
+}
+
+video.addEventListener("canplaythrough", () => {
+    videoListo = true;
+    intentarReproducir();
 });
 
-// Reforzamos la visibilidad si el mouse está cerca del área del botón
+video.addEventListener("ended", () => {
+    video.style.opacity = "0";
+    poster.style.opacity = "1";
+    video.currentTime = 0;
+    logo.style.transform = "scale(1) translateY(0px)";
+    minimoTiempoCumplido = false;
+
+    // Espera 10 segundos antes de pasar al siguiente banner si termina el video
+    if (loopTimeout) clearTimeout(loopTimeout);
+    loopTimeout = setTimeout(() => {
+        siguienteBanner();
+    }, 10000);
+});
+
+// ================== EVENTOS VOLUMEN Y HOVER ==================
+container.addEventListener("mouseenter", () => { volumeBtn.style.opacity = "1"; });
+container.addEventListener("mouseleave", () => { volumeBtn.style.opacity = "0"; });
+
 container.addEventListener("mousemove", (e) => {
     const rect = container.getBoundingClientRect();
     const distanciaDerecha = rect.right - e.clientX;
@@ -99,207 +308,34 @@ container.addEventListener("mousemove", (e) => {
 
 volumeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    e.preventDefault(); // Evitamos cualquier acción extra
+    e.preventDefault();
 
     sonidoActivo = !sonidoActivo;
+    video.muted = !sonidoActivo;
 
     if (sonidoActivo) {
-        video.muted = false;
         volumeBtn.className = "fas fa-volume-up";
-        console.log("Sonido activado");
-    } else {
-        video.muted = true;
-        volumeBtn.className = "fas fa-volume-mute";
-        console.log("Sonido silenciado");
-    }
-});
-
-// ... (Overlay y resto del contenido igual)
-
-// ================== LÓGICA VIDEO (Ajuste para asegurar sonido) ==================
-function intentarReproducir() {
-    if (videoListo && minimoTiempoCumplido && bannerVisible) {
-        // Al intentar reproducir, nos aseguramos de respetar el estado de sonidoActivo
-        video.muted = !sonidoActivo; 
-        
-        video.play().catch(error => {
-            console.log("Autoplay con sonido bloqueado, intentando muteado:", error);
-            // Si el navegador bloquea el sonido, muteamos para que al menos se vea el video
-            video.muted = true;
-            sonidoActivo = false;
-            volumeBtn.className = "fas fa-volume-mute";
-        });
-
-        video.style.opacity = "1";
-        poster.style.opacity = "0";
-        logo.style.transform = "scale(0.65) translateY(120px)";
-    }
-}
-
-// Eliminamos el event listener de click en el container que muteaba/desmuteaba
-// para que no interfiera con el botón específico de volumen.
-/* 
-container.addEventListener("click", () => {
-    video.muted = false;
-}); 
-*/
-
-// ... (Resto del código del IntersectionObserver y Responsive se mantiene igual)
-
-// ================== OVERLAY ==================
-const overlay = document.createElement("div");
-overlay.style.position = "absolute";
-overlay.style.inset = "0";
-overlay.style.background = "linear-gradient(to right, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.1))";
-overlay.style.zIndex = "1";
-container.appendChild(overlay);
-
-
-// ================== CONTENIDO ==================
-const content = document.createElement("div");
-content.style.position = "relative";
-content.style.zIndex = "2";
-content.style.padding = "120px 60px 60px 60px";
-content.style.maxWidth = "600px";
-container.appendChild(content);
-
-// ================== BADGE ==================
-const badge = document.createElement("div");
-badge.textContent = "Proximamente";
-badge.style.position = "absolute";
-badge.style.top = "30px";
-badge.style.left = "60px";
-badge.style.padding = "6px 14px";
-badge.style.background = "#0a102a";
-badge.style.borderRadius = "20px";
-badge.style.fontSize = "14px";
-badge.style.fontWeight = "bold";
-badge.style.zIndex = "3";
-container.appendChild(badge);
-
-// Logo
-const logo = document.createElement("img");
-logo.src = data.logo;
-logo.style.width = "300px";
-logo.style.display = "block";
-logo.style.marginBottom = "20px";
-logo.style.transition = "transform 0.6s ease";
-logo.style.transformOrigin = "left top";
-content.appendChild(logo);
-
-// Descripción
-const desc = document.createElement("p");
-desc.textContent = data.descripcion;
-desc.style.fontSize = "18px";
-desc.style.lineHeight = "1.5";
-desc.style.marginBottom = "25px";
-content.appendChild(desc);
-
-// Botones
-const btnContainer = document.createElement("div");
-btnContainer.style.display = "flex";
-btnContainer.style.gap = "15px";
-content.appendChild(btnContainer);
-
-data.botones.forEach(texto => {
-    const btn = document.createElement("button");
-    btn.textContent = texto;
-
-    btn.style.padding = "12px 28px";
-    btn.style.borderRadius = "30px";
-    btn.style.border = "none";
-    btn.style.cursor = "pointer";
-    btn.style.fontSize = "16px";
-    btn.style.fontWeight = "bold";
-    btn.style.transition = "0.3s";
-
-if (texto === "Ver más") {
-    btn.style.background = "white";
-    btn.style.color = "black";
-
-    btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        window.location.href = "/browse/watch/index.html?id=0047";
-    });
-
-} else {
-    btn.style.background = "rgba(255,255,255,0.2)";
-    btn.style.color = "white";
-    btn.style.border = "1px solid white";
-}
-    
-
-    btn.onmouseenter = () => btn.style.transform = "scale(1.05)";
-    btn.onmouseleave = () => btn.style.transform = "scale(1)";
-
-    btnContainer.appendChild(btn);
-});
-
-// ================== LÓGICA VIDEO ==================
-let videoListo = false;
-let minimoTiempoCumplido = false;
-let esperaScrollTimeout = null;
-let bannerVisible = true;
-
-setTimeout(() => {
-    minimoTiempoCumplido = true;
-    intentarReproducir();
-}, 3000);
-
-video.addEventListener("canplaythrough", () => {
-    videoListo = true;
-    intentarReproducir();
-});
-
-function intentarReproducir() {
-    if (videoListo && minimoTiempoCumplido && bannerVisible) {
-        video.play();
-        video.style.opacity = "1";
-        poster.style.opacity = "0";
-        logo.style.transform = "scale(0.65) translateY(120px)";
-    }
-}
-
-video.addEventListener("ended", () => {
-    video.style.opacity = "0";
-    poster.style.opacity = "1";
-    video.currentTime = 0;
-
-    logo.style.transform = "scale(1) translateY(0px)";
-
-    minimoTiempoCumplido = false;
-
-    setTimeout(() => {
-        minimoTiempoCumplido = true;
         intentarReproducir();
-    }, 10000);
+    } else {
+        volumeBtn.className = "fas fa-volume-mute";
+    }
 });
 
-container.addEventListener("click", () => {
-    video.muted = false;
-});
-
-// ================== VISIBILIDAD ==================
+// ================== VISIBILIDAD (IntersectionObserver) ==================
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (!entry.isIntersecting) {
             bannerVisible = false;
-
-            if (esperaScrollTimeout) {
-                clearTimeout(esperaScrollTimeout);
-                esperaScrollTimeout = null;
-            }
+            if (esperaScrollTimeout) clearTimeout(esperaScrollTimeout);
+            if (loopTimeout) clearTimeout(loopTimeout);
 
             video.pause();
             video.currentTime = 0;
-
             video.style.opacity = "0";
             poster.style.opacity = "1";
-
             logo.style.transform = "scale(1) translateY(0px)";
         } else {
             bannerVisible = true;
-
             esperaScrollTimeout = setTimeout(() => {
                 intentarReproducir();
             }, 3000);
@@ -322,7 +358,7 @@ function aplicarResponsive() {
         content.style.height = "100%";
         content.style.display = "flex";
         content.style.flexDirection = "column";
-        content.style.padding = "90px 25px 25px 25px";
+        content.style.padding = "90px 25px 50px 25px"; // Extra padding inferior para los puntitos
 
         logo.style.width = "220px";
         logo.style.marginBottom = "14px";
@@ -365,5 +401,7 @@ function aplicarResponsive() {
     }
 }
 
-aplicarResponsive();
 window.addEventListener("resize", aplicarResponsive);
+
+// INICIALIZACIÓN PRIMERA CARGA
+cargarBanner(currentIndex);
