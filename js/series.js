@@ -332,3 +332,71 @@ card.innerHTML = `
   hideLoader();
 
 });
+
+/* SCROLL BUTTONS */
+
+const leftBtn =
+document.getElementById("episodesLeft");
+
+const rightBtn =
+document.getElementById("episodesRight");
+
+function smoothHorizontalScroll(
+  element,
+  distance,
+  duration = 500
+){
+
+  const start =
+  element.scrollLeft;
+
+  const startTime =
+  performance.now();
+
+  function easeInOutCubic(t){
+
+    return t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function animate(currentTime){
+
+    const elapsed =
+    currentTime - startTime;
+
+    const progress =
+    Math.min(elapsed / duration, 1);
+
+    const eased =
+    easeInOutCubic(progress);
+
+    element.scrollLeft =
+    start + (distance * eased);
+
+    if(progress < 1){
+
+      requestAnimationFrame(
+        animate
+      );
+    }
+  }
+
+  requestAnimationFrame(
+    animate
+  );
+}
+
+leftBtn.onclick = () =>
+smoothHorizontalScroll(
+  episodesList,
+  -860,
+  520
+);
+
+rightBtn.onclick = () =>
+smoothHorizontalScroll(
+  episodesList,
+  860,
+  520
+);
