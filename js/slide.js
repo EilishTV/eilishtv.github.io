@@ -2,16 +2,7 @@ const container = document.getElementById("proximamente");
 
 // ================== CONFIG ==================
 const banners = [
-        {   badge: "Disponible Mañana",
-        logo: "https://m.media-amazon.com/images/S/pv-target-images/376607ff1bb4ae48c0d92498c28ff45664a40070f09baa619d1f53abb8128e2e.png",
-        descripcion: "Asesinato. Sexo. Música. Esto no es una obra de ficción.",
-        poster: "https://www.rollingstone.com/wp-content/uploads/2023/02/swarm.jpg?w=1296&h=730&crop=1",
-        video: "VIDEO_2.mp4",
-        botones: ["Ver más", "Recordarme"],
-        url: "/browse/watch/index.html?id=0048"
-    },
-
-    {   badge: "Próximamente",
+        {   badge: "Ya disponible",
         logo: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Billie_Eilish_-_Hit_Me_Hard_and_Soft_-_The_Tour_In_3D_logo.png",
         descripcion: "Una experiencia visual inmersiva que transforma el álbum en un viaje intenso y envolvente",
         poster: "https://www.seattlemusicnews.com/wp-content/uploads/2024/12/billie-eilish-seattle-climate-pledge-arena-by-henry-hwu-1.jpg",
@@ -20,13 +11,23 @@ const banners = [
         url: "/browse/watch/index.html?id=0047"
     },
 
+        {   badge: "Próximamente",
+        logo: "https://m.media-amazon.com/images/S/pv-target-images/376607ff1bb4ae48c0d92498c28ff45664a40070f09baa619d1f53abb8128e2e.png",
+        descripcion: "Asesinato. Sexo. Música. Esto no es una obra de ficción.",
+        poster: "https://www.rollingstone.com/wp-content/uploads/2023/02/swarm.jpg?w=1296&h=730&crop=1",
+        video: "VIDEO_2.mp4",
+        botones: ["Ver más", "Recordarme"],
+        url: "/browse/watch/index.html?id=0042"
+    },
+
+
     {   badge: "Próximamente",
         logo: "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/34b3fc4c-f94c-4c33-9d4d-1bfbb1862140/compose?format=webp&width=1600",
-        descripcion: "Mientras buscaba un lugar tranquilo para practicar su saxofón, Lisa Simpson es descubierta por los artistas Billie Eilish y Finneas O'Connell, ganadores del premio GRAMMY® y que encabezan las listas de éxitos. Billie invita a Lisa a su estudio para una sesión de improvisación especial que jamás olvidará.",
+        descripcion: "Lisa Simpson es descubierta por los artistas Billie Eilish y Finneas O'Connell.",
         poster: "https://i.ytimg.com/vi/tRAnZjrzORE/maxresdefault.jpg",
         video: "VIDEO_2.mp4",
         botones: ["Ver más", "Recordarme"],
-        url: "/browse/watch/index.html?id=0048"
+        url: "/browse/watch/index.html?id=0050"
     }    
 ];
 
