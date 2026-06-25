@@ -234,6 +234,166 @@
                 width:180px;
             }
         }
+
+/* =======================================
+           EILISHTV CUSTOM MODAL (DISEÑO BLANCO)
+           ======================================= */
+
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* Fondo semi-transparente claro con desenfoque */
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .custom-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .custom-modal-box {
+            /* Fondo blanco puro y bordes sutiles */
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 420px;
+            /* Sombra suave y elegante, típica de diseños limpios */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transform: translateY(10px) scale(0.95);
+            transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-align: center;
+            color: #1a1a1a; /* Texto principal oscuro */
+        }
+
+        .custom-modal-overlay.active .custom-modal-box {
+            transform: translateY(0) scale(1);
+        }
+
+        .custom-modal-box h3 {
+            margin: 0 0 10px 0;
+            color: #ff4444; /* Mantenemos el rojo de alerta */
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .custom-modal-box p {
+            color: #666666; /* Gris intermedio para la descripción */
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+        }
+
+        .custom-modal-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f9f9f9; /* Fondo de input gris muy claro */
+            border: 1px solid #dddddd;
+            border-radius: 6px;
+            color: #1a1a1a;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .custom-modal-input:focus {
+            background: #ffffff;
+            border-color: #ff4444;
+            box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+        }
+
+        /* Input con error de contraseña incorrecta */
+        .custom-modal-input.input-error {
+            border-color: #ff4444;
+            background: #fff5f5; /* Tono rojizo muy sutil de fondo */
+            animation: shake 0.4s ease;
+        }
+
+        .custom-modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .custom-modal-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Botón Confirmar Baja (Rojo) */
+        .custom-modal-btn-danger {
+            background: #ff4444;
+            color: #ffffff;
+        }
+
+        .custom-modal-btn-danger:hover {
+            background: #e03333;
+            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.2);
+        }
+
+        /* Botón Cancelar (Blanco/Gris) */
+        .custom-modal-btn-cancel {
+            background: #ffffff;
+            color: #555555;
+            border: 1px solid #cccccc;
+        }
+
+        .custom-modal-btn-cancel:hover {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            border-color: #bbbbbb;
+        }
+
+        /* Botón deshabilitado durante la carga */
+        .custom-modal-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #eeeeee !important;
+            color: #999999 !important;
+            border-color: #eeeeee !important;
+            box-shadow: none !important;
+        }
+
+        /* Animación de vibración para error de clave */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
+        @media(max-width:480px){
+            .custom-modal-box {
+                padding: 24px 20px;
+            }
+            .custom-modal-actions {
+                flex-direction: column-reverse;
+            }
+        }
     </style>
 </head>
 
@@ -584,6 +744,8 @@
 
         });
     }
+
+    
 
 </script>
 

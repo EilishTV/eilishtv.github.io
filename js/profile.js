@@ -251,3 +251,4 @@ document.addEventListener('click', async (e) => {
 });
 
 window.initProfilesUI = initProfilesUI;
+

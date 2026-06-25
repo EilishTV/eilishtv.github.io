@@ -15,7 +15,10 @@ import {
     browserLocalPersistence,
     sendEmailVerification,
     signInAnonymously,
-    sendPasswordResetEmail // <-- IMPORTACIÓN AÑADIDA AQUÍ
+    sendPasswordResetEmail, // <-- IMPORTACIÓN AÑADIDA AQUÍ
+    EmailAuthProvider,           // <-- AÑADIDO AQUÍ
+    reauthenticateWithCredential, // <-- AÑADIDO AQUÍ
+    deleteUser                    // <-- AÑADIDO AQUÍ
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
@@ -55,6 +58,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 await setPersistence(auth, browserLocalPersistence);
+
+window.miAuthFirebase = auth;
 
 
 // =======================================
@@ -557,6 +562,127 @@ forgotPasswordBtn?.addEventListener("click", async (e) => {
         } else {
             showError("Failed to send reset email. Try again.");
         }
+    }
+});
+
+// =======================================
+// ELIMINAR CUENTA CON MODAL REAL (SIN ALERTAS)
+// =======================================
+
+document.addEventListener('click', async (event) => {
+    
+    if (event.target && event.target.id === 'deleteAccountBtn') {
+        
+        // 1. Creamos e inyectamos la estructura del Modal dinámicamente en el HTML
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'custom-modal-overlay';
+        modalOverlay.innerHTML = `
+            <div class="custom-modal-box">
+                <h3>Eliminar Cuenta</h3>
+                <p>¿Estás completamente seguro de que deseas eliminar tu cuenta de EilishTV? Esta acción borrará todos tus datos y no se puede deshacer.</p>
+                
+                <input type="password" id="modalPasswordInput" class="custom-modal-input" placeholder="Introduce tu contraseña actual" required>
+                
+                <div class="custom-modal-actions">
+                    <button id="modalCancelBtn" class="custom-modal-btn custom-modal-btn-cancel">Cancelar</button>
+                    <button id="modalConfirmBtn" class="custom-modal-btn custom-modal-btn-danger">Confirmar Baja</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modalOverlay);
+        
+        // Retraso mínimo para activar la animación de entrada de CSS (fade-in)
+        setTimeout(() => modalOverlay.classList.add('active'), 10);
+
+        // Referencias a los elementos internos del modal creado
+        const cancelBtn = modalOverlay.querySelector('#modalCancelBtn');
+        const confirmBtn = modalOverlay.querySelector('#modalConfirmBtn');
+        const passwordInput = modalOverlay.querySelector('#modalPasswordInput');
+
+        // Función reutilizable para cerrar y destruir el modal con transición suave
+        const cerrarModal = () => {
+            modalOverlay.classList.remove('active');
+            setTimeout(() => modalOverlay.remove(), 250); // Espera que termine la animación
+        };
+
+        // Si hace clic en Cancelar, cerramos todo
+        cancelBtn.addEventListener('click', cerrarModal);
+
+        // Si hace clic en Confirmar Baja, procesamos con Firebase
+        confirmBtn.addEventListener('click', async () => {
+            const password = passwordInput.value.trim();
+            
+            // Validación visual de campo vacío utilizando el CSS de error
+            if (!password) {
+                passwordInput.classList.add('input-error');
+                passwordInput.focus();
+                setTimeout(() => passwordInput.classList.remove('input-error'), 400);
+                return;
+            }
+
+            try {
+                // Instancia global o local de auth de tu script
+                const usuarioActual = auth ? auth.currentUser : null;
+
+                if (!usuarioActual) {
+                    passwordInput.placeholder = "No hay sesión activa.";
+                    cerrarModal();
+                    return;
+                }
+
+                // Deshabilitamos los controles del modal mientras procesa Firebase
+                confirmBtn.disabled = true;
+                cancelBtn.disabled = true;
+                passwordInput.disabled = true;
+                confirmBtn.innerText = "Procesando...";
+
+                // 2. Creamos la credencial de autenticación con la contraseña del modal
+                const credencial = EmailAuthProvider.credential(usuarioActual.email, password);
+
+                // 3. Reautenticación en caliente ante Firebase
+                await reauthenticateWithCredential(usuarioActual, credencial);
+
+                // 4. Eliminación definitiva de la cuenta en Authentication
+                await deleteUser(usuarioActual);
+
+                // 5. Limpieza de datos en LocalStorage de la interfaz
+                localStorage.removeItem("navProfileName");
+                localStorage.removeItem("navProfileAvatar");
+
+                // Cerramos el modal de forma limpia antes de redirigir
+                cerrarModal();
+                window.location.href = "/"; 
+
+            } catch (error) {
+                console.error("[DELETE ACCOUNT ERROR]", error);
+                
+                // Si la clave está mal, le damos feedback visual con la animación CSS 'shake'
+                if (error.code === 'auth/wrong-password') {
+                    passwordInput.classList.add('input-error');
+                    passwordInput.value = '';
+                    passwordInput.placeholder = "Contraseña incorrecta, reintenta.";
+                    
+                    // Remueve la clase de error para que la animación pueda volver a ejecutarse si se equivoca de nuevo
+                    setTimeout(() => passwordInput.classList.remove('input-error'), 400);
+
+                    // Rehabilitamos los controles para el nuevo intento
+                    confirmBtn.disabled = false;
+                    cancelBtn.disabled = false;
+                    passwordInput.disabled = false;
+                    confirmBtn.innerText = "Confirmar Baja";
+                    passwordInput.focus();
+                } else {
+                    // Cualquier otro error se muestra en el mismo placeholder de texto de forma discreta
+                    passwordInput.value = '';
+                    passwordInput.disabled = false;
+                    confirmBtn.disabled = false;
+                    cancelBtn.disabled = false;
+                    confirmBtn.innerText = "Confirmar Baja";
+                    passwordInput.placeholder = "Error al procesar baja.";
+                }
+            }
+        });
     }
 });
 
