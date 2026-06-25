@@ -36,11 +36,7 @@
         <div id="contenedor"></div>
     </main>
 
-    <!-- Cookie Banner -->
-    <div id="cookie-banner">
-        <span>This site uses analytics cookies. Accept to enable Google Analytics.</span>
-        <button onclick="acceptCookies()">Accept</button>
-    </div>
+
 
     <!-- Global Loader -->
     <div id="globalLoader" class="loaderOverlay">
@@ -258,33 +254,24 @@
 <script src="../js/slide.js" defer></script>
 <script type="module" src="../js/script.js"></script>
 
-    <!-- Cookies & Analytics -->
-    <script>
-        function acceptCookies() {
-            localStorage.setItem('cookiesAccepted', 'true');
-            loadAnalytics();
-            document.getElementById('cookie-banner').style.display = 'none';
-        }
+<script>
+    (function loadAnalytics() {
+        // 1. Crea e inyecta el script de Google Tag Manager
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-8VRV0Y4Z5P';
+        document.head.appendChild(script);
 
-        function loadAnalytics() {
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-8VRV0Y4Z5P';
-            document.head.appendChild(script);
+        // 2. Inicializa la capa de datos (dataLayer)
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
 
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            window.gtag = gtag;
-
-            gtag('js', new Date());
-            gtag('config', 'G-8VRV0Y4Z5P');
-        }
-
-        if (localStorage.getItem('cookiesAccepted') === 'true') {
-            loadAnalytics();
-            document.getElementById('cookie-banner').style.display = 'none';
-        }
-    </script>
+        // 3. Configura el rastreo
+        gtag('js', new Date());
+        gtag('config', 'G-8VRV0Y4Z5P');
+    })();
+</script>
 
     <div id="igPopupOverlay" class="ig-popup-overlay hidden">
     <div class="ig-popup-box">
