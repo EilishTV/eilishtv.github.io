@@ -145,6 +145,30 @@ body{
 }
 
 /* =========================
+CTA DISABLED
+========================= */
+/* CTA DISABLED */
+
+.cta.disabled input{
+    background:#3a3a3a;
+    color:#999;
+    border:none;
+}
+
+.cta.disabled input::placeholder{
+    color:#999;
+}
+
+.cta.disabled button{
+    background:#555;
+    color:#bbb;
+}
+
+.cta.disabled button:hover{
+    transform:none;
+    opacity:1;
+}
+/* =========================
    REGISTER PAGE
 ========================= */
 
@@ -712,4 +736,52 @@ body{
 
     opacity:.5;
     cursor:default;
+}
+
+/* Posicionamiento relativo para que el tooltip flote correctamente */
+.cta {
+    position: relative;
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilos del Tooltip Flotante (Celulares) */
+.mobile-tooltip {
+    display: none; /* Oculto por defecto en PC y móvil */
+    position: absolute;
+    bottom: 125%; /* Se posiciona justo arriba del input */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: #2c0d0d; /* Un tono oscuro rojizo elegante */
+    color: #ff8080;
+    border: 1px solid #ff3333;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: center;
+    width: 90%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+}
+
+/* Flecha apuntando hacia abajo hacia el input */
+.mobile-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: #2c0d0d transparent transparent transparent;
+}
+
+/* Clase que activa la animación y muestra el tooltip */
+.mobile-tooltip.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
