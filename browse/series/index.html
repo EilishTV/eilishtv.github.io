@@ -22,29 +22,46 @@ body{
   overflow-x:hidden;
 }
 
-/* HERO */
 .hero{
-  height:100vh;
+  min-height:100vh;
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
+
   display:flex;
   align-items:center;
   padding:60px;
+
   position:relative;
   box-sizing:border-box;
+  overflow:hidden;
+
+  background-color:#1A1D29;
 }
 
-/* OVERLAY */
+/* overlay desktop NUEVO */
+
 .overlay{
   position:absolute;
   inset:0;
-  background:linear-gradient(
+
+  background:
+  linear-gradient(
+    to bottom,
+    rgba(26,29,41,0.15) 0%,
+    rgba(26,29,41,0.45) 45%,
+    rgba(26,29,41,0.88) 78%,
+    #1A1D29 100%
+  ),
+  linear-gradient(
     to right,
-    rgba(0,0,0,0.95) 20%,
-    rgba(0,0,0,0.4) 60%,
-    transparent
+    rgba(26,29,41,0.95) 15%,
+    rgba(26,29,41,0.65) 45%,
+    rgba(26,29,41,0.15) 70%,
+    transparent 100%
   );
+
+  z-index:1;
 }
 
 /* CONTENT */
@@ -156,9 +173,16 @@ button{
 
 .episodesSection{
   padding:40px 60px;
-  background:transparent;
+  background:#1A1D29;
 }
 
+.seasonSelect,
+.episodesWrapper{
+  transform:translateY(-90px);
+
+  position:relative;
+  z-index:20;
+}
 .episodesList{
   display:flex;
   gap:20px;
@@ -333,6 +357,96 @@ button{
 
   .episodeDesc{
     font-size:13px;
+  }
+
+}
+
+/* ===========================
+   EPISODES ARROWS DESKTOP
+=========================== */
+
+.episodesWrapper{
+  position:relative;
+  width:100%;
+}
+
+/* FLECHAS */
+
+.episodesArrow{
+  position:absolute;
+  top:42%;
+  transform:translateY(-50%);
+
+  width:54px !important;
+  height:54px !important;
+  min-width:54px;
+
+  padding:0 !important;
+  margin:0;
+
+  border:none;
+  border-radius:999px;
+
+  background:rgba(140,140,140,.18) !important;
+
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  color:#fff !important;
+
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  gap:0 !important;
+
+  z-index:999;
+  cursor:pointer;
+
+  opacity:.75;
+
+  transition:
+    transform .28s ease,
+    opacity .28s ease,
+    background .28s ease;
+}
+
+/* ICONO */
+
+.episodesArrow i{
+  font-size:18px;
+  pointer-events:none;
+}
+
+/* HOVER */
+
+.episodesArrow:hover{
+  opacity:1;
+
+  background:
+  rgba(180,180,180,.28)
+  !important;
+
+  transform:
+  translateY(-50%)
+  scale(1.08);
+}
+
+/* POSICIONES */
+
+.episodesArrow.left{
+  left:-22px;
+}
+
+.episodesArrow.right{
+  right:-22px;
+}
+
+/* ESCONDER EN MOBILE */
+
+@media screen and (max-width:768px){
+
+  .episodesArrow{
+    display:none !important;
   }
 
 }
@@ -566,7 +680,19 @@ button{
     <select id="seasonSelector"></select>
   </div>
 
+  <div class="episodesWrapper">
+
+  <button class="episodesArrow left" id="episodesLeft">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+
   <div class="episodesList" id="episodesList"></div>
+
+  <button class="episodesArrow right" id="episodesRight">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+
+</div>
 
 </section>
 
