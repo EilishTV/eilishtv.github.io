@@ -391,6 +391,26 @@ CTA DISABLED
     opacity:0.9;
 }
 
+/* Contenedor del enlace */
+.forgot-password {
+    text-align: left;     /* Lo alinea a la derecha, estilo Netflix/Spotify */
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+
+/* Estilo base del enlace (Color Neutro/Atenuado) */
+.forgot-password a {
+    color: #aaaaaa;        /* Un gris claro para que no compita con el botón principal */
+    font-size: 13px;
+    text-decoration: none; /* Quita la línea subrayada por defecto */
+    transition: color 0.2s ease; /* Suaviza el cambio de color */
+}
+
+/* Efecto al pasar el mouse por encima (Feedback Positivo) */
+.forgot-password a:hover {
+    color: #ffffff;        /* Se ilumina en blanco (o el color principal de tu marca) */
+    text-decoration: underline; /* Aparece el subrayado solo al hacer hover */
+}
 
 /* =========================
    TABLET

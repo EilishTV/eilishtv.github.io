@@ -14,7 +14,8 @@ import {
     setPersistence,
     browserLocalPersistence,
     sendEmailVerification,
-    signInAnonymously
+    signInAnonymously,
+    sendPasswordResetEmail // <-- IMPORTACIÓN AÑADIDA AQUÍ
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
@@ -516,6 +517,48 @@ window.logoutUser = async function () {
 
 };
 
+
+// =======================================
+// PASSWORD RESET (FORGOT PASSWORD)
+// =======================================
+
+const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+
+forgotPasswordBtn?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const email = document.getElementById("emailInput")?.value.trim();
+    const el = document.getElementById("formError");
+
+    if (!email) {
+        if (el) el.classList.remove("success"); // Asegura que sea rojo
+        showError("Please enter your email to reset password.");
+        return;
+    }
+
+    try {
+        await sendPasswordResetEmail(auth, email);
+        
+        // Si todo sale bien, añadimos la clase 'success' para ponerlo en verde
+        if (el) el.classList.add("success");
+        showError("Reset email sent! Please check your inbox.");
+
+    } catch (err) {
+        console.error("[PASSWORD RESET ERROR]", err);
+        
+        // Si hay error, removemos la clase 'success' para que vuelva a ser rojo
+        if (el) el.classList.remove("success");
+
+        if (err.code === "auth/invalid-email") {
+            showError("The email address is not valid.");
+        } else if (err.code === "auth/user-not-found") {
+            showError("There is no user registered with this email.");
+        } else {
+            showError("Failed to send reset email. Try again.");
+        }
+    }
+});
 
 // =======================================
 // EXPORT
