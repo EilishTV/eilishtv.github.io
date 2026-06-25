@@ -571,3 +571,48 @@ if (topContainer) {
 
   hideLoader();
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const popup = document.getElementById("igPopupOverlay");
+    const closeBtn = document.getElementById("closeIgPopup");
+    const followBtn = document.getElementById("followIgBtn");
+
+    // Clave para almacenar en LocalStorage
+    const LAST_SHOW_KEY = "ig_popup_last_show";
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+
+    function checkPopup() {
+        const lastShow = localStorage.getItem(LAST_SHOW_KEY);
+        const now = Date.now();
+
+        // Si no existe el registro o si ya pasaron 24 horas
+        if (!lastShow || (now - parseInt(lastShow)) > ONE_DAY_MS) {
+            // Retrasamos la aparición 2 segundos para que no sea tan brusco al cargar
+            setTimeout(() => {
+                popup?.classList.remove("hidden");
+                // Guardamos el momento exacto en que se le mostró
+                localStorage.setItem(LAST_SHOW_KEY, now.toString());
+            }, 2000);
+        }
+    }
+
+    // Evento para cerrar desde la 'X'
+    closeBtn?.addEventListener("click", () => {
+        popup?.classList.add("hidden");
+    });
+
+    // Evento para cerrar si hacen clic en el botón de seguir
+    followBtn?.addEventListener("click", () => {
+        popup?.classList.add("hidden");
+    });
+
+    // Cerrar también si hacen clic fuera de la caja del popup
+    popup?.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.classList.add("hidden");
+        }
+    });
+
+    // Ejecutar la verificación
+    checkPopup();
+});
