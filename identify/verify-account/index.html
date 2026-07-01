@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activar Cuenta | EilishTV</title>
+    <link rel="stylesheet" href="../../css/identify.css">
+</head>
+
+<body class="verifyPage">
+
+    <div class="verifyBox" id="setupView">
+        <img src="../../images/extras/logo.png" class="log-logo" alt="EilishTV" style="display: block; margin: 0 auto 20px;">
+        
+        <h2>Activa tu cuenta</h2>
+        <p class="desc" style="text-align: center; margin-bottom: 20px;">
+            Ingresa el correo electrónico con el que te registraste para recibir el enlace de activación.
+        </p>
+
+        <input type="email" id="activationEmail" placeholder="Tu correo electrónico" style="width: 100%; margin-bottom: 15px;">
+        
+        <p id="formError" class="formError"></p>
+        <p id="formSuccess" class="formSuccess" style="color: #2ecc71; text-align: center; font-size: 14px; margin-bottom: 10px;"></p>
+
+        <button id="sendLinkBtn" class="continueBtn" style="width: 100%;">Enviar enlace de activación</button>
+        
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="../login/" style="color: #666; text-decoration: none; font-size: 14px;">Volver al Login</a>
+        </p>
+    </div>
+
+    <div class="verifyBox" id="processingView" style="display: none; text-align: center;">
+        <img src="../../images/extras/logo.png" class="log-logo" alt="EilishTV" style="display: block; margin: 0 auto 20px;">
+        <h2 id="processingTitle">Verificando tu enlace...</h2>
+        <p id="processingDesc" class="desc">Por favor, aguarda un instante mientras procesamos la activación.</p>
+    </div>
+
+    <div class="verifyBox" id="setupView"> ... </div>
+    <div class="verifyBox" id="processingView" style="display: none;"> ... </div>
+
+    <script type="module" src="../../js/identify.js"></script>
+    <script type="module" src="../../js/verify-account.js"></script>
+        
+
+</body>
+</html>
